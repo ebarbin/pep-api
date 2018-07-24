@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.ejemplos;
+package ar.edu.uade.pfi.pep.endpoint;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import ar.edu.uade.pfi.pep.ejemplos.Person;
+import ar.edu.uade.pfi.pep.ejemplos.Prueba;
+import ar.edu.uade.pfi.pep.repository.PersonRepository;
 
 @RestController
 public class PersonController {
