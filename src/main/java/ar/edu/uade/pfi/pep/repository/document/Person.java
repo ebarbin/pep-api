@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.ejemplos;
+package ar.edu.uade.pfi.pep.repository.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

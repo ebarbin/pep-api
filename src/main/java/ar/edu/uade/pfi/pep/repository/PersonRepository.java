@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 
-import ar.edu.uade.pfi.pep.ejemplos.Person;
+import ar.edu.uade.pfi.pep.repository.document.Person;
 
 public interface PersonRepository extends MongoRepository<Person, String> {
 
