@@ -1,12 +1,16 @@
-package ar.edu.uade.pfi.pep.endpoint;
+package ar.edu.uade.pfi.pep.controller.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * @author ebarbin
+ *
+ */
 public class ResponseBuilder {
 
 	public static ResponseEntity<Response> success(Object data) {
-		return ResponseEntity.ok().body(Response.build(data));
+		return ResponseEntity.ok().body(Response.ok(data));
 	}
 	
 	public static ResponseEntity<Response> error(HttpStatus status, Exception e) {
@@ -23,5 +27,9 @@ public class ResponseBuilder {
 	
 	public static ResponseEntity<Response> error(String errorDescription) {
 		return ResponseEntity.badRequest().body(Response.error(errorDescription));
+	}
+
+	public static ResponseEntity<Response> success() {
+		return ResponseEntity.ok().body(Response.ok());
 	}
 }

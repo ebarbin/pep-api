@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.ejemplos;
+package ar.edu.uade.pfi.pep.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,5 +34,4 @@ public class ServiceExample {
 	public Person save(Person person) {
 		return this.repo.save(person);
 	}
-
 }

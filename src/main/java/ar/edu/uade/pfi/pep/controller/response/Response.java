@@ -1,7 +1,11 @@
-package ar.edu.uade.pfi.pep.endpoint;
+package ar.edu.uade.pfi.pep.controller.response;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * @author ebarbin
+ *
+ */
 public class Response {
 
 	private Object body;
@@ -11,7 +15,13 @@ public class Response {
 
 	private Response() {}
 
-	public static Response build(Object data) {
+	public static Response ok() {
+		Response response = new Response();
+		response.setOk(true);
+		return response;
+	}
+	
+	public static Response ok(Object data) {
 		Response response = new Response();
 		response.setBody(data);
 		response.setOk(true);
