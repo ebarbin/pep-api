@@ -28,4 +28,12 @@ public class Ingredient {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 }

@@ -15,34 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
-import ar.edu.uade.pfi.pep.repository.document.Recipe;
-import ar.edu.uade.pfi.pep.service.RecipeService;
+import ar.edu.uade.pfi.pep.repository.document.Ingredient;
+import ar.edu.uade.pfi.pep.service.IngredientService;
 
 @RestController
-@RequestMapping("/recipe")
-public class RecipeController implements Controller<Recipe, Integer> {
+@RequestMapping("/ingredient")
+public class IngredientController implements Controller<Ingredient, Integer>{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RecipeController.class);
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(IngredientController.class);
+	
 	@Autowired
-	private RecipeService recipeService;
+	private IngredientService ingredientService;
 
 	@PostMapping
-	public ResponseEntity<Response> post(@RequestBody Recipe recipe) {
+	public ResponseEntity<Response> post(@RequestBody Ingredient ingredient) {
 		try {
-			return ResponseBuilder.success(this.recipeService.save(recipe));
+			return ResponseBuilder.success(this.ingredientService.save(ingredient));
 		} catch (Exception e) {
-			RecipeController.LOGGER.error(e.getMessage(), e);
+			IngredientController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
 		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> put(@PathVariable("id") Integer id, @RequestBody Recipe recipe) {
+	public ResponseEntity<Response> put(@PathVariable("id") Integer id, @RequestBody Ingredient ingredient) {
 		try {
-			return ResponseBuilder.success(this.recipeService.save(recipe));
+			return ResponseBuilder.success(this.ingredientService.save(ingredient));
 		} catch (Exception e) {
-			RecipeController.LOGGER.error(e.getMessage(), e);
+			IngredientController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
 		}
 	}
@@ -50,9 +50,9 @@ public class RecipeController implements Controller<Recipe, Integer> {
 	@GetMapping
 	public ResponseEntity<Response> findAll() {
 		try {
-			return ResponseBuilder.success(this.recipeService.findAll());
+			return ResponseBuilder.success(this.ingredientService.findAll());
 		} catch (Exception e) {
-			RecipeController.LOGGER.error(e.getMessage(), e);
+			IngredientController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
 		}
 	}
@@ -60,12 +60,11 @@ public class RecipeController implements Controller<Recipe, Integer> {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> delete(@PathVariable("id") Integer id) {
 		try {
-			this.recipeService.delete(id);
+			this.ingredientService.delete(id);
 			return ResponseBuilder.success();
 		} catch (Exception e) {
-			RecipeController.LOGGER.error(e.getMessage(), e);
+			IngredientController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
 		}
 	}
-
 }

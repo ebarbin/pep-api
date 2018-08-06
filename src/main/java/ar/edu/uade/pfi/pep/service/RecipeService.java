@@ -9,12 +9,12 @@ import ar.edu.uade.pfi.pep.repository.RecipeRepository;
 import ar.edu.uade.pfi.pep.repository.document.Recipe;
 
 @Component
-public class CourseService {
+public class RecipeService implements Service<Recipe, Integer>{
 
 	@Autowired
 	private RecipeRepository recipeRepo;
 	
-	public List<Recipe> getAll() {
+	public List<Recipe> findAll() {
 		return this.recipeRepo.findAll();
 	}
 	
