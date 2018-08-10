@@ -1,5 +1,8 @@
 package ar.edu.uade.pfi.pep.controller;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ import ar.edu.uade.pfi.pep.service.IngredientService;
 
 @RestController
 @RequestMapping("/ingredient")
-public class IngredientController implements Controller<Ingredient, Integer>{
+public class IngredientController implements Controller<Ingredient, BigInteger>{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IngredientController.class);
 	
@@ -37,8 +40,18 @@ public class IngredientController implements Controller<Ingredient, Integer>{
 		}
 	}
 
+	@PostMapping("/multi")
+	public ResponseEntity<Response> post(@RequestBody List<Ingredient> ingredients) {
+		try {
+			return ResponseBuilder.success(this.ingredientService.save(ingredients));
+		} catch (Exception e) {
+			IngredientController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> put(@PathVariable("id") Integer id, @RequestBody Ingredient ingredient) {
+	public ResponseEntity<Response> put(@PathVariable("id") BigInteger id, @RequestBody Ingredient ingredient) {
 		try {
 			return ResponseBuilder.success(this.ingredientService.save(ingredient));
 		} catch (Exception e) {
@@ -58,7 +71,7 @@ public class IngredientController implements Controller<Ingredient, Integer>{
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Response> delete(@PathVariable("id") Integer id) {
+	public ResponseEntity<Response> delete(@PathVariable("id") BigInteger id) {
 		try {
 			this.ingredientService.delete(id);
 			return ResponseBuilder.success();

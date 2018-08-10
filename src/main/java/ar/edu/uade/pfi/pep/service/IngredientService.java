@@ -1,5 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import ar.edu.uade.pfi.pep.repository.IngredientRepository;
 import ar.edu.uade.pfi.pep.repository.document.Ingredient;
 
 @Component
-public class IngredientService implements Service<Ingredient, Integer>{
+public class IngredientService implements Service<Ingredient, BigInteger>{
 
 	@Autowired
 	private IngredientRepository repo;
@@ -25,9 +26,13 @@ public class IngredientService implements Service<Ingredient, Integer>{
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(BigInteger id) {
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(id);
 		this.repo.delete(ingredient);
+	}
+
+	public List<Ingredient> save(List<Ingredient> ingredients) {
+		return this.repo.saveAll(ingredients);
 	}
 }

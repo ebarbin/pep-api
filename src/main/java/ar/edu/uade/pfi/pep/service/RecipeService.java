@@ -1,5 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import ar.edu.uade.pfi.pep.repository.RecipeRepository;
 import ar.edu.uade.pfi.pep.repository.document.Recipe;
 
 @Component
-public class RecipeService implements Service<Recipe, Integer>{
+public class RecipeService implements Service<Recipe, BigInteger>{
 
 	@Autowired
 	private RecipeRepository recipeRepo;
@@ -22,7 +23,7 @@ public class RecipeService implements Service<Recipe, Integer>{
 		return this.recipeRepo.save(recipe);
 	}
 	
-	public void delete(Integer id) {
+	public void delete(BigInteger id) {
 		Recipe r = new Recipe();
 		r.setId(id);
 		this.recipeRepo.delete(r);
