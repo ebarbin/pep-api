@@ -1,7 +1,5 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
-import java.math.BigInteger;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ingredient {
 
 	@Id
-	private BigInteger id;
+	private String id;
 	
 	private String name;
 	
@@ -31,11 +29,11 @@ public class Ingredient {
 		this.amount = amount;
 	}
 
-	public BigInteger getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(BigInteger id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 }

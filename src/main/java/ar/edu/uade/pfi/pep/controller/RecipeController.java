@@ -1,7 +1,5 @@
 package ar.edu.uade.pfi.pep.controller;
 
-import java.math.BigInteger;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ import ar.edu.uade.pfi.pep.service.RecipeService;
 
 @RestController
 @RequestMapping("/recipe")
-public class RecipeController implements Controller<Recipe, BigInteger> {
+public class RecipeController implements Controller<Recipe, String> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RecipeController.class);
 
@@ -40,7 +38,7 @@ public class RecipeController implements Controller<Recipe, BigInteger> {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> put(@PathVariable("id") BigInteger id, @RequestBody Recipe recipe) {
+	public ResponseEntity<Response> put(@PathVariable("id") String id, @RequestBody Recipe recipe) {
 		try {
 			return ResponseBuilder.success(this.recipeService.save(recipe));
 		} catch (Exception e) {
@@ -60,7 +58,7 @@ public class RecipeController implements Controller<Recipe, BigInteger> {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Response> delete(@PathVariable("id") BigInteger id) {
+	public ResponseEntity<Response> delete(@PathVariable("id") String id) {
 		try {
 			this.recipeService.delete(id);
 			return ResponseBuilder.success();

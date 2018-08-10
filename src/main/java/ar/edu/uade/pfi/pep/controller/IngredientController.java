@@ -1,6 +1,5 @@
 package ar.edu.uade.pfi.pep.controller;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,7 +22,7 @@ import ar.edu.uade.pfi.pep.service.IngredientService;
 
 @RestController
 @RequestMapping("/ingredient")
-public class IngredientController implements Controller<Ingredient, BigInteger>{
+public class IngredientController implements Controller<Ingredient, String>{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IngredientController.class);
 	
@@ -51,7 +50,7 @@ public class IngredientController implements Controller<Ingredient, BigInteger>{
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> put(@PathVariable("id") BigInteger id, @RequestBody Ingredient ingredient) {
+	public ResponseEntity<Response> put(@PathVariable("id") String id, @RequestBody Ingredient ingredient) {
 		try {
 			return ResponseBuilder.success(this.ingredientService.save(ingredient));
 		} catch (Exception e) {
@@ -71,7 +70,7 @@ public class IngredientController implements Controller<Ingredient, BigInteger>{
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Response> delete(@PathVariable("id") BigInteger id) {
+	public ResponseEntity<Response> delete(@PathVariable("id") String id) {
 		try {
 			this.ingredientService.delete(id);
 			return ResponseBuilder.success();
