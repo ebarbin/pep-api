@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.config;
+package ar.edu.uade.pfi.pep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
