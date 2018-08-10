@@ -28,6 +28,10 @@ public class ResponseBuilder {
 	public static ResponseEntity<Response> error(String errorDescription) {
 		return ResponseEntity.badRequest().body(Response.error(errorDescription));
 	}
+	
+	public static ResponseEntity<Object> validationError(String errorDescription) {
+		return ResponseEntity.badRequest().body(Response.error(errorDescription));
+	}
 
 	public static ResponseEntity<Response> success() {
 		return ResponseEntity.ok().body(Response.ok());
