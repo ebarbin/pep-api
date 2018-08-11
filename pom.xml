@@ -31,6 +31,12 @@
 			<artifactId>spring-security-core</artifactId>
 		</dependency>
 		
+		<!-- Para usar el encoder de password -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		
 		<!-- Para el envio de correos -->
 		<dependency>
 			<groupId>javax.mail</groupId>

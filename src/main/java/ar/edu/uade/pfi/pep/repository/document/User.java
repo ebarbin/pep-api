@@ -10,16 +10,13 @@ public class User {
 
 	@Id
 	private String id;
-	
 	@NotEmpty
 	private String username;
-	
 	@NotEmpty
 	private String password;
-
 	private Boolean active;
-	
-	private Integer loginAttempt;
+	private int loginAttempt;
+	private UserAccountEvent lastEvent;
 	
 	public String getId() {
 		return id;
@@ -53,11 +50,19 @@ public class User {
 		this.active = active;
 	}
 
-	public Integer getLoginAttempt() {
+	public int getLoginAttempt() {
 		return loginAttempt;
 	}
 
-	public void setLoginAttempt(Integer loginAttempt) {
+	public void setLoginAttempt(int loginAttempt) {
 		this.loginAttempt = loginAttempt;
+	}
+
+	public UserAccountEvent getLastEvent() {
+		return lastEvent;
+	}
+
+	public void setLastEvent(UserAccountEvent lastEvent) {
+		this.lastEvent = lastEvent;
 	}
 }
