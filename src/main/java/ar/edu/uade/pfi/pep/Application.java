@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.config;
+package ar.edu.uade.pfi.pep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories(basePackages = {"ar.edu.uade.pfi.pep.repository"})
-@ComponentScan({"ar.edu.uade.pfi.pep.controller", "ar.edu.uade.pfi.pep.service", })
+@ComponentScan({"ar.edu.uade.pfi.pep.config", "ar.edu.uade.pfi.pep.controller", "ar.edu.uade.pfi.pep.service", })
 public class Application {
 
+	 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 	
 	public static void main(String[] args) {
