@@ -82,16 +82,16 @@ public class MailService {
 			subject = "Plataforma educativa para Programar (PEP): Creación de usuario";
 			sb.append("<p>Hola!!<br></p>");
 			sb.append("<p>Has registrado un usuario en el portal. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/active/{{username}}/{{token}}'>aquí</a>.</p>");
+			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
 			body = sb.toString();
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());
 			break;
-		case UNBLOCK:
+		case UNLOCK:
 			subject = "Plataforma educativa para Programar (PEP): Desbloquear usuario";
 			sb.append("<p>Hola!!<br></p>");
-			sb.append("<p>Has solicitado el desbloqueo del usuario. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/unblock/{{username}}/{{token}}'>aquí</a>.</p>");
+			sb.append("<p>Has solicitado el desbloqueo de usuario. Para completar el proceso debes ");
+			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
 			body = sb.toString();
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());
@@ -111,7 +111,7 @@ public class MailService {
 			subject = "Plataforma educativa para Programar (PEP): Activación de usuario";
 			sb.append("<p>Hola!!<br></p>");
 			sb.append("<p>Has solicitado la activacion del usuario. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/active/{{username}}/{{token}}'>aquí</a>.</p>");
+			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
 			body = sb.toString();
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());

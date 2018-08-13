@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.repository.UserRepository;
@@ -27,10 +27,9 @@ public class UserService {
 
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
 		if (existingUser != null)
-			throw new Exception("Username already exist");
+			throw new Exception("El usuario ingresado no existe.");
 
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(user.getPassword());
+		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
 		user.setPassword(hashedPassword);
 		user.setActive(Boolean.FALSE);
@@ -44,36 +43,37 @@ public class UserService {
 		this.mailService.sendMail(user);
 	}
 
-	public void active(User user, String token) throws Exception {
+	public void activate(String username, String token) throws Exception {
 
-		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		User existingUser = this.userRepository.findByUsername(username);
 		if (existingUser == null)
-			throw new Exception("Username not exist");
+			throw new Exception("El usuario ingresado no existe.");
 
 		if (existingUser.getActive())
-			throw new Exception("Username already active");
+			throw new Exception("El usuario ingresado ya se encuentra activo.");
 
 		Interval interval = new Interval(new DateTime(existingUser.getLastEvent().getDate()), new DateTime());
 		if (interval.toDuration().getStandardHours() < 24) {
 			if (existingUser.getLastEvent().getToken().equals(token)) {
 				existingUser.setActive(Boolean.TRUE);
+				existingUser.setLoginAttempt(0);
 				this.userRepository.save(existingUser);
 			} else {
-				throw new Exception("Invalid token");
+				throw new Exception("Ha fallado el proceso de validacion. Consulte atraves de pfipep@gmail.com");
 			}
 		} else {
-			throw new Exception("Activation process was expired");
+			throw new Exception("El link de activación se ha vencido, vuelve a gestionarlo.");
 		}
 	}
 
-	public void requestActive(User user) throws Exception {
+	public void requestActive(String username) throws Exception {
 
-		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		User existingUser = this.userRepository.findByUsername(username);
 		if (existingUser == null)
-			throw new Exception("Username not exist");
+			throw new Exception("El usuario ingresado no existe.");
 
 		if (existingUser.getActive())
-			throw new Exception("Username already active");
+			throw new Exception("El usuario ingresado ya se encuentra activo.");
 
 		existingUser.setLastEvent(new UserAccountEvent());
 		existingUser.getLastEvent().setDate(new Date());
@@ -84,11 +84,11 @@ public class UserService {
 		this.mailService.sendMail(existingUser);
 	}
 	
-	public void requestPasswordReset(User user) throws Exception {
+	public void requestPasswordReset(String username) throws Exception {
 
-		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		User existingUser = this.userRepository.findByUsername(username);
 		if (existingUser == null)
-			throw new Exception("Username not exist");
+			throw new Exception("El usuario ingresado no existe.");
 
 		if (!existingUser.getActive())
 			throw new Exception("Username not active");
@@ -102,18 +102,23 @@ public class UserService {
 		this.mailService.sendMail(existingUser);
 	}
 	
-	public void requestUnblock(User user) throws Exception {
+	public void requestUnlock(String username) throws Exception {
 
-		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		User existingUser = this.userRepository.findByUsername(username);
 		if (existingUser == null)
-			throw new Exception("Username not exist");
+			throw new Exception("El usuario ingresado no existe.");
 
-		if (existingUser.getActive())
-			throw new Exception("Username not block");
+		if (existingUser.getActive()) {
+			throw new Exception("El usuario ingresado no esta bloqueado.");
+		} else {
+			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
+				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
+			}
+		}
 
 		existingUser.setLastEvent(new UserAccountEvent());
 		existingUser.getLastEvent().setDate(new Date());
-		existingUser.getLastEvent().setType(UserAccountEventType.UNBLOCK);
+		existingUser.getLastEvent().setType(UserAccountEventType.UNLOCK);
 		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
 
 		this.userRepository.save(existingUser);
@@ -124,23 +129,25 @@ public class UserService {
 
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
 		if (existingUser == null)
-			throw new Exception("Username not exist");
+			throw new Exception("El usuario ingresado no existe.");
 
-		if (!existingUser.getActive())
-			throw new Exception("Username is not active");
-
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(user.getPassword());
-
-		if (!existingUser.getPassword().equals(hashedPassword)) {
+		if (!existingUser.getActive()) {
+			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
+				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
+			} else {
+				throw new Exception("El usuario ingresado esta bloqueado.");
+			}
+		}
+			
+		if (!BCrypt.checkpw(user.getPassword(), existingUser.getPassword())) {
 			existingUser.setLoginAttempt(existingUser.getLoginAttempt() + 1);
-			if (existingUser.getLoginAttempt() == 3) {
+			if (existingUser.getLoginAttempt() > 3) {
 				existingUser.setActive(Boolean.FALSE);
 				this.userRepository.save(existingUser);
-				throw new Exception("Password is not valid. User block!");
+				throw new Exception("La contraseña no corresponde. Usuario bloqueado!");
 			} else {
 				this.userRepository.save(existingUser);
-				throw new Exception("Password is not valid");
+				throw new Exception("La contraseña no corresponde.");
 			}
 		} else {
 			existingUser.setLoginAttempt(0);
