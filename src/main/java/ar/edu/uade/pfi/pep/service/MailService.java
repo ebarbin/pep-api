@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import ar.edu.uade.pfi.pep.repository.document.User;
+
 @Component
 public class MailService {
 
@@ -37,7 +39,7 @@ public class MailService {
 	@Value("${mail.smtp.port}")
 	private String mailSmtpPort;
 
-	public void sendMail(String to, String subjectMessage, String bodyMessage) throws Exception {
+	private void sendMail(String to, String subjectMessage, String bodyMessage) {
 
 		Runnable runnable = new Runnable() {
 			@Override
@@ -63,12 +65,60 @@ public class MailService {
 					message.setText(bodyMessage, "utf-8", "html");
 
 					Transport.send(message);
-					System.out.println("Inside : " + Thread.currentThread().getName());
 				} catch (Exception e) {
 					MailService.LOGGER.error(e.getMessage(), e);
 				}
 			}
 		};
 		new Thread(runnable).start();
+	}
+
+	public void sendMail(User user) {
+		String subject = "";
+		StringBuffer sb = new StringBuffer("<h1>Portal Educativo para Programar (pep)</h1>");
+		String body = "";
+		switch (user.getLastEvent().getType()) {
+		case CREATION:
+			subject = "Plataforma educativa para Programar (PEP): Creación de usuario";
+			sb.append("<p>Hola!!<br></p>");
+			sb.append("<p>Has registrado un usuario en el portal. Para completar el proceso debes ");
+			sb.append("hacer click <a href='http://localhost:4200/user/active/{{username}}/{{token}}'>aquí</a>.</p>");
+			body = sb.toString();
+			body = body.replace("{{username}}", user.getUsername());
+			body = body.replace("{{token}}", user.getLastEvent().getToken());
+			break;
+		case UNBLOCK:
+			subject = "Plataforma educativa para Programar (PEP): Desbloquear usuario";
+			sb.append("<p>Hola!!<br></p>");
+			sb.append("<p>Has solicitado el desbloqueo del usuario. Para completar el proceso debes ");
+			sb.append("hacer click <a href='http://localhost:4200/user/unblock/{{username}}/{{token}}'>aquí</a>.</p>");
+			body = sb.toString();
+			body = body.replace("{{username}}", user.getUsername());
+			body = body.replace("{{token}}", user.getLastEvent().getToken());
+			break;
+
+		case PASSWORD_RESET:
+			subject = "Plataforma educativa para Programar (PEP): Blanqueo de contraseña";
+			sb.append("<p>Hola!!<br></p>");
+			sb.append("<p>Has solicitado el blanqueo de contraseña. Para completar el proceso debes ");
+			sb.append("hacer click <a href='http://localhost:4200/user/reset/{{username}}/{{token}}'>aquí</a>.</p>");
+			body = sb.toString();
+			body = body.replace("{{username}}", user.getUsername());
+			body = body.replace("{{token}}", user.getLastEvent().getToken());
+			break;
+
+		case REQUEST_ACTIVATION:
+			subject = "Plataforma educativa para Programar (PEP): Activación de usuario";
+			sb.append("<p>Hola!!<br></p>");
+			sb.append("<p>Has solicitado la activacion del usuario. Para completar el proceso debes ");
+			sb.append("hacer click <a href='http://localhost:4200/user/active/{{username}}/{{token}}'>aquí</a>.</p>");
+			body = sb.toString();
+			body = body.replace("{{username}}", user.getUsername());
+			body = body.replace("{{token}}", user.getLastEvent().getToken());
+			break;
+		}
+
+		this.sendMail(user.getUsername(), subject, body);
+
 	}
 }

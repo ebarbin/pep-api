@@ -41,11 +41,10 @@ public class UserService {
 		user.getLastEvent().setToken(UUID.randomUUID().toString());
 
 		this.userRepository.save(user);
-		this.mailService.sendMail("emmanuel.barbin@gmail.com", "USUARIO CREADOP",
-				"HAS CREADO UN USUARIO DE MANERA IMPECA!");
+		this.mailService.sendMail(user);
 	}
 
-	public User active(User user, String token) throws Exception {
+	public void active(User user, String token) throws Exception {
 
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
 		if (existingUser == null)
@@ -65,8 +64,60 @@ public class UserService {
 		} else {
 			throw new Exception("Activation process was expired");
 		}
+	}
 
-		return existingUser;
+	public void requestActive(User user) throws Exception {
+
+		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		if (existingUser == null)
+			throw new Exception("Username not exist");
+
+		if (existingUser.getActive())
+			throw new Exception("Username already active");
+
+		existingUser.setLastEvent(new UserAccountEvent());
+		existingUser.getLastEvent().setDate(new Date());
+		existingUser.getLastEvent().setType(UserAccountEventType.REQUEST_ACTIVATION);
+		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
+
+		this.userRepository.save(existingUser);
+		this.mailService.sendMail(existingUser);
+	}
+	
+	public void requestPasswordReset(User user) throws Exception {
+
+		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		if (existingUser == null)
+			throw new Exception("Username not exist");
+
+		if (!existingUser.getActive())
+			throw new Exception("Username not active");
+
+		existingUser.setLastEvent(new UserAccountEvent());
+		existingUser.getLastEvent().setDate(new Date());
+		existingUser.getLastEvent().setType(UserAccountEventType.PASSWORD_RESET);
+		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
+
+		this.userRepository.save(existingUser);
+		this.mailService.sendMail(existingUser);
+	}
+	
+	public void requestUnblock(User user) throws Exception {
+
+		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		if (existingUser == null)
+			throw new Exception("Username not exist");
+
+		if (existingUser.getActive())
+			throw new Exception("Username not block");
+
+		existingUser.setLastEvent(new UserAccountEvent());
+		existingUser.getLastEvent().setDate(new Date());
+		existingUser.getLastEvent().setType(UserAccountEventType.UNBLOCK);
+		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
+
+		this.userRepository.save(existingUser);
+		this.mailService.sendMail(existingUser);
 	}
 
 	public User login(User user) throws Exception {
