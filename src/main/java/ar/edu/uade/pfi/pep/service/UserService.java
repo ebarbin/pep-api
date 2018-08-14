@@ -1,5 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,16 +10,26 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ar.edu.uade.pfi.pep.repository.StudentRepository;
+import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.UserRepository;
-import ar.edu.uade.pfi.pep.repository.document.User;
-import ar.edu.uade.pfi.pep.repository.document.UserAccountEvent;
-import ar.edu.uade.pfi.pep.repository.document.UserAccountEventType;
+import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
+import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEvent;
+import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEventType;
 
 @Component
 public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private TeacherRepository teacherRepository;
+
+	@Autowired
+	private StudentRepository studentRepository;
 
 	@Autowired
 	private MailService mailService;
@@ -31,6 +42,16 @@ public class UserService {
 
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
+		Teacher teacher = this.teacherRepository.findByDocumentTypeAndDocumentNumber(user.getDocumentType(),
+				user.getDocumentNumber());
+		Student student = this.studentRepository.findByDocumentTypeAndDocumentNumber(user.getDocumentType(),
+				user.getDocumentNumber());
+
+		if (teacher == null && student == null) {
+			throw new Exception("No hay persona registrada con ese tipo y nro. de documento.");
+		}
+
+		user.setRoles(new ArrayList<String>());
 		user.setPassword(hashedPassword);
 		user.setActive(Boolean.FALSE);
 		user.setLoginAttempt(Integer.valueOf(0));
@@ -39,7 +60,22 @@ public class UserService {
 		user.getLastEvent().setType(UserAccountEventType.CREATION);
 		user.getLastEvent().setToken(UUID.randomUUID().toString());
 
-		this.userRepository.save(user);
+		user = this.userRepository.save(user);
+
+		if (teacher != null) {
+			teacher.setUserId(user.getId());
+			this.teacherRepository.save(teacher);
+			user.getRoles().add("ROLE_TEACHER");
+		}
+
+		if (student != null) {
+			student.setUserId(user.getId());
+			this.studentRepository.save(student);
+			user.getRoles().add("ROLE_STUDENT");
+		}
+		
+		user = this.userRepository.save(user);
+		
 		this.mailService.sendMail(user);
 	}
 
@@ -83,7 +119,7 @@ public class UserService {
 		this.userRepository.save(existingUser);
 		this.mailService.sendMail(existingUser);
 	}
-	
+
 	public void requestPasswordReset(String username) throws Exception {
 
 		User existingUser = this.userRepository.findByUsername(username);
@@ -91,7 +127,7 @@ public class UserService {
 			throw new Exception("El usuario ingresado no existe.");
 
 		if (!existingUser.getActive())
-			throw new Exception("Username not active");
+			throw new Exception("El usuario ingresado no está activo.");
 
 		existingUser.setLastEvent(new UserAccountEvent());
 		existingUser.getLastEvent().setDate(new Date());
@@ -101,7 +137,7 @@ public class UserService {
 		this.userRepository.save(existingUser);
 		this.mailService.sendMail(existingUser);
 	}
-	
+
 	public void requestUnlock(String username) throws Exception {
 
 		User existingUser = this.userRepository.findByUsername(username);
@@ -109,7 +145,7 @@ public class UserService {
 			throw new Exception("El usuario ingresado no existe.");
 
 		if (existingUser.getActive()) {
-			throw new Exception("El usuario ingresado no esta bloqueado.");
+			throw new Exception("El usuario ingresado no está bloqueado.");
 		} else {
 			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
 				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
@@ -132,14 +168,14 @@ public class UserService {
 			throw new Exception("El usuario ingresado no existe.");
 
 		if (!existingUser.getActive()) {
-			
+
 			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
 				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
 			} else if (existingUser.getLastEvent().getType() == UserAccountEventType.LOCK) {
-				throw new Exception("El usuario ingresado esta bloqueado.");
+				throw new Exception("El usuario ingresado está bloqueado.");
 			}
 		}
-			
+
 		if (!BCrypt.checkpw(user.getPassword(), existingUser.getPassword())) {
 			existingUser.setLoginAttempt(existingUser.getLoginAttempt() + 1);
 			if (existingUser.getLoginAttempt() > 3) {
@@ -155,7 +191,10 @@ public class UserService {
 			}
 		} else {
 			existingUser.setLoginAttempt(0);
-			existingUser.setLastEvent(null);
+			existingUser.setLastEvent(new UserAccountEvent());
+			existingUser.getLastEvent().setDate(new Date());
+			existingUser.getLastEvent().setType(UserAccountEventType.SESSION);
+			existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
 			return this.userRepository.save(existingUser);
 		}
 	}

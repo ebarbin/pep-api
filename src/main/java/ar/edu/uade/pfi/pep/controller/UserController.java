@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
-import ar.edu.uade.pfi.pep.repository.document.User;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
 import ar.edu.uade.pfi.pep.service.UserService;
 
 @RestController
@@ -30,6 +30,7 @@ public class UserController {
 	@PostMapping("/login")
 	public ResponseEntity<Response> login(@RequestBody User user) {
 		try {
+			//TODO generate token
 			return ResponseBuilder.success(this.userService.login(user));
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);
