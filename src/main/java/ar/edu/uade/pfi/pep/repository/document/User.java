@@ -1,6 +1,6 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
-import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,59 +10,80 @@ public class User {
 
 	@Id
 	private String id;
-	@NotEmpty
 	private String username;
-	@NotEmpty
 	private String password;
 	private Boolean active;
 	private int loginAttempt;
 	private UserAccountEvent lastEvent;
-	
+	private String documentType;
+	private String documentNumber;
+	private String name;
+	private String sureName;
+	private List<String> roles;
 	public String getId() {
 		return id;
 	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
 	public String getUsername() {
 		return username;
 	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	public Boolean getActive() {
 		return active;
 	}
-
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
 	public int getLoginAttempt() {
 		return loginAttempt;
 	}
-
 	public void setLoginAttempt(int loginAttempt) {
 		this.loginAttempt = loginAttempt;
 	}
-
 	public UserAccountEvent getLastEvent() {
 		return lastEvent;
 	}
-
 	public void setLastEvent(UserAccountEvent lastEvent) {
 		this.lastEvent = lastEvent;
+	}
+	public String getDocumentType() {
+		return documentType;
+	}
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSureName() {
+		return sureName;
+	}
+	public void setSureName(String sureName) {
+		this.sureName = sureName;
+	}
+	public List<String> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 }

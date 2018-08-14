@@ -27,7 +27,7 @@ public class UserService {
 
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
 		if (existingUser != null)
-			throw new Exception("El usuario ingresado no existe.");
+			throw new Exception("El email ingresado ya se encuentra registrado.");
 
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
