@@ -132,9 +132,10 @@ public class UserService {
 			throw new Exception("El usuario ingresado no existe.");
 
 		if (!existingUser.getActive()) {
+			
 			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
 				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
-			} else {
+			} else if (existingUser.getLastEvent().getType() == UserAccountEventType.LOCK) {
 				throw new Exception("El usuario ingresado esta bloqueado.");
 			}
 		}
@@ -143,6 +144,9 @@ public class UserService {
 			existingUser.setLoginAttempt(existingUser.getLoginAttempt() + 1);
 			if (existingUser.getLoginAttempt() > 3) {
 				existingUser.setActive(Boolean.FALSE);
+				existingUser.setLastEvent(new UserAccountEvent());
+				existingUser.getLastEvent().setDate(new Date());
+				existingUser.getLastEvent().setType(UserAccountEventType.LOCK);
 				this.userRepository.save(existingUser);
 				throw new Exception("La contraseña no corresponde. Usuario bloqueado!");
 			} else {
@@ -151,6 +155,7 @@ public class UserService {
 			}
 		} else {
 			existingUser.setLoginAttempt(0);
+			existingUser.setLastEvent(null);
 			return this.userRepository.save(existingUser);
 		}
 	}
