@@ -30,7 +30,6 @@ public class UserController {
 	@PostMapping("/login")
 	public ResponseEntity<Response> login(@RequestBody User user) {
 		try {
-			//TODO generate token
 			return ResponseBuilder.success(this.userService.login(user));
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);
@@ -65,6 +64,17 @@ public class UserController {
 			@PathVariable("token") String token) {
 		try {
 			this.userService.activate(username, token);
+			return ResponseBuilder.success();
+		} catch (Exception e) {
+			UserController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@GetMapping("/logout/{username}")
+	public ResponseEntity<Response> logout(@PathVariable("username") String username) {
+		try {
+			this.userService.logout(username);
 			return ResponseBuilder.success();
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);

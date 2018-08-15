@@ -9,10 +9,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ApplicationConfig implements WebMvcConfigurer {
 
 	@Autowired
-	private RequestInterceptor custom;
+	private RequestInterceptor requestInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(this.custom).addPathPatterns("/pep-api/**").excludePathPatterns("/pep-api/user/**");
+		registry.addInterceptor(this.requestInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login", "/user/register",
+				"/user/request-unlock/**", "/user/activate/**", "/user/logout/**");
 	}
 }

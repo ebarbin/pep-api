@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -25,27 +26,32 @@ public class RequestInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		if (request.getAttribute("username") != null && request.getAttribute("token") != null) {
-			String userame = (String) request.getAttribute("username");
-			String token = (String) request.getAttribute("token");
+		if (request.getHeader("username") != null && request.getHeader("token") != null) {
+			
+			String userame = (String) request.getHeader("username");
+			String token = (String) request.getHeader("token");
 			User user = this.userRepository.findByUsername(userame);
 
 			if (user != null) {
-				if (user.getLastEvent().getType() == UserAccountEventType.SESSION) {
+				if (user.getLastEvent().getType() == UserAccountEventType.OPEN_SESSION) {
 					if (user.getLastEvent().getToken().equals(token)) {
 						Interval interval = new Interval(new DateTime(user.getLastEvent().getDate()), new DateTime());
 						if (interval.toDuration().getStandardMinutes() < 10) {
 							user.getLastEvent().setDate(new Date());
 							this.userRepository.save(user);
 							return true;
+						} else {
+							response.getWriter().println(HttpStatus.UNAUTHORIZED.name());
+							response.setStatus(HttpStatus.UNAUTHORIZED.value());
+							return false;
 						}
 					}
 				}
 			}
 		}
 
-		response.getWriter().println("error");
-		response.setStatus(401);
+		response.getWriter().println(HttpStatus.FORBIDDEN.name());
+		response.setStatus(HttpStatus.FORBIDDEN.value());
 		return false;
 	}
 }

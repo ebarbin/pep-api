@@ -57,7 +57,7 @@ public class UserService {
 		user.setLoginAttempt(Integer.valueOf(0));
 		user.setLastEvent(new UserAccountEvent());
 		user.getLastEvent().setDate(new Date());
-		user.getLastEvent().setType(UserAccountEventType.CREATION);
+		user.getLastEvent().setType(UserAccountEventType.PENDING_ACTIVATION);
 		user.getLastEvent().setToken(UUID.randomUUID().toString());
 
 		user = this.userRepository.save(user);
@@ -91,6 +91,7 @@ public class UserService {
 		Interval interval = new Interval(new DateTime(existingUser.getLastEvent().getDate()), new DateTime());
 		if (interval.toDuration().getStandardHours() < 24) {
 			if (existingUser.getLastEvent().getToken().equals(token)) {
+				existingUser.setLastEvent(null);
 				existingUser.setActive(Boolean.TRUE);
 				existingUser.setLoginAttempt(0);
 				this.userRepository.save(existingUser);
@@ -147,7 +148,7 @@ public class UserService {
 		if (existingUser.getActive()) {
 			throw new Exception("El usuario ingresado no está bloqueado.");
 		} else {
-			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
+			if (existingUser.getLastEvent().getType() == UserAccountEventType.PENDING_ACTIVATION) {
 				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
 			}
 		}
@@ -168,8 +169,7 @@ public class UserService {
 			throw new Exception("El usuario ingresado no existe.");
 
 		if (!existingUser.getActive()) {
-
-			if (existingUser.getLastEvent().getType() == UserAccountEventType.CREATION) {
+			if (existingUser.getLastEvent().getType() == UserAccountEventType.PENDING_ACTIVATION) {
 				throw new Exception("El usuario esta pendiente de activación. Verifica tu correo electrónico.");
 			} else if (existingUser.getLastEvent().getType() == UserAccountEventType.LOCK) {
 				throw new Exception("El usuario ingresado está bloqueado.");
@@ -193,9 +193,17 @@ public class UserService {
 			existingUser.setLoginAttempt(0);
 			existingUser.setLastEvent(new UserAccountEvent());
 			existingUser.getLastEvent().setDate(new Date());
-			existingUser.getLastEvent().setType(UserAccountEventType.SESSION);
+			existingUser.getLastEvent().setType(UserAccountEventType.OPEN_SESSION);
 			existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
 			return this.userRepository.save(existingUser);
 		}
+	}
+
+	public void logout(String username) {
+		User existingUser = this.userRepository.findByUsername(username);
+		if (existingUser == null) return;
+		
+		existingUser.setLastEvent(null);
+		this.userRepository.save(existingUser);
 	}
 }

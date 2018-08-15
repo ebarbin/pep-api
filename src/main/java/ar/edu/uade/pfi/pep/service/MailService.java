@@ -78,7 +78,7 @@ public class MailService {
 		StringBuffer sb = new StringBuffer("<h1>Portal Educativo para Programar (pep)</h1>");
 		String body = "";
 		switch (user.getLastEvent().getType()) {
-		case CREATION:
+		case PENDING_ACTIVATION:
 			subject = "Plataforma educativa para Programar (PEP): Creación de usuario";
 			sb.append("<p>Hola!!<br></p>");
 			sb.append("<p>Has registrado un usuario en el portal. Para completar el proceso debes ");
