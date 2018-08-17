@@ -216,8 +216,8 @@ public class UserService {
 		return this.userRepository.save(existingUser);
 	}
 	
-	public void changePassword(ChangePassword changePassword) throws Exception {
-		User existingUser = this.userRepository.findByUsername(changePassword.getUsername());
+	public void changePassword(String username, ChangePassword changePassword) throws Exception {
+		User existingUser = this.userRepository.findByUsername(username);
 
 		if (!BCrypt.checkpw(changePassword.getOldPassword(), existingUser.getPassword())) {
 			throw new Exception("La contraseña anterior no corresponde.");
