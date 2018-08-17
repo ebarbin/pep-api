@@ -10,6 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
 import ar.edu.uade.pfi.pep.repository.StudentRepository;
 import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.UserRepository;
@@ -204,6 +205,27 @@ public class UserService {
 		if (existingUser == null) return;
 		
 		existingUser.setLastEvent(null);
+		this.userRepository.save(existingUser);
+	}
+
+	public User update(User user) {
+		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		existingUser.setName(user.getName());
+		existingUser.setSurename(user.getSurename());
+		
+		return this.userRepository.save(existingUser);
+	}
+	
+	public void changePassword(ChangePassword changePassword) throws Exception {
+		User existingUser = this.userRepository.findByUsername(changePassword.getUsername());
+
+		if (!BCrypt.checkpw(changePassword.getOldPassword(), existingUser.getPassword())) {
+			throw new Exception("La contraseña anterior no corresponde.");
+		}
+	
+		String hashedPassword = BCrypt.hashpw(changePassword.getNewPassword(), BCrypt.gensalt());
+		existingUser.setPassword(hashedPassword);
+		
 		this.userRepository.save(existingUser);
 	}
 }

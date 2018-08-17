@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
@@ -27,10 +29,31 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/login")
+	@PutMapping("/login")
 	public ResponseEntity<Response> login(@RequestBody User user) {
 		try {
 			return ResponseBuilder.success(this.userService.login(user));
+		} catch (Exception e) {
+			UserController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@PutMapping
+	public ResponseEntity<Response> update(@RequestBody User user) {
+		try {
+			return ResponseBuilder.success(this.userService.update(user));
+		} catch (Exception e) {
+			UserController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@PutMapping("change-password")
+	public ResponseEntity<Response> changePassword(@RequestBody ChangePassword changePassword) {
+		try {
+			this.userService.changePassword(changePassword);
+			return ResponseBuilder.success();
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
