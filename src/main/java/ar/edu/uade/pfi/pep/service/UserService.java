@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
 import ar.edu.uade.pfi.pep.repository.StudentRepository;
@@ -34,6 +39,9 @@ public class UserService {
 
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+	private GridFsOperations gridOperations;
 
 	public void register(User user) throws Exception {
 
@@ -74,9 +82,9 @@ public class UserService {
 			this.studentRepository.save(student);
 			user.getRoles().add("ROLE_STUDENT");
 		}
-		
+
 		user = this.userRepository.save(user);
-		
+
 		this.mailService.sendMail(user);
 	}
 
@@ -202,8 +210,9 @@ public class UserService {
 
 	public void logout(String username) {
 		User existingUser = this.userRepository.findByUsername(username);
-		if (existingUser == null) return;
-		
+		if (existingUser == null)
+			return;
+
 		existingUser.setLastEvent(null);
 		this.userRepository.save(existingUser);
 	}
@@ -212,20 +221,32 @@ public class UserService {
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
 		existingUser.setName(user.getName());
 		existingUser.setSurename(user.getSurename());
-		
+
 		return this.userRepository.save(existingUser);
 	}
-	
+
 	public void changePassword(String username, ChangePassword changePassword) throws Exception {
 		User existingUser = this.userRepository.findByUsername(username);
 
 		if (!BCrypt.checkpw(changePassword.getOldPassword(), existingUser.getPassword())) {
 			throw new Exception("La contraseña anterior no corresponde.");
 		}
-	
+
 		String hashedPassword = BCrypt.hashpw(changePassword.getNewPassword(), BCrypt.gensalt());
 		existingUser.setPassword(hashedPassword);
-		
+
 		this.userRepository.save(existingUser);
 	}
+
+	public User storeProfileImage(String username, MultipartFile file) throws Exception {
+		User existingUser = this.userRepository.findByUsername(username);
+		if (existingUser.getImageId() != null) {
+			Criteria c = Criteria.where("_id").is(new ObjectId(existingUser.getImageId()));
+			this.gridOperations.delete(new Query(c));
+		}
+		ObjectId objectId = this.gridOperations.store(file.getInputStream(), file.getOriginalFilename());
+		existingUser.setImageId(objectId.toString());
+		return this.userRepository.save(existingUser);
+	}
+
 }

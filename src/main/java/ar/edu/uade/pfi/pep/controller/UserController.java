@@ -52,13 +52,12 @@ public class UserController {
 		}
 	}
 
-	@PutMapping("/{username}/profile-image")
+	@PutMapping("/{username}/store-profile-image")
 	@Consumes("multipart/form-data")
 	public ResponseEntity<Response> updateProfileImage(@PathVariable("username") String username,
 			@RequestParam("file") MultipartFile file) {
 		try {
-			// this.userService.changePassword(changePassword);
-			return ResponseBuilder.success();
+			return ResponseBuilder.success(this.userService.storeProfileImage(username, file));
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

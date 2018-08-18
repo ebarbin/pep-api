@@ -20,6 +20,7 @@ public class User {
 	private String name;
 	private String surename;
 	private List<String> roles;
+	private String imageId;
 
 	public String getId() {
 		return id;
@@ -108,4 +109,13 @@ public class User {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
+
+	public String getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
+	}
+
 }

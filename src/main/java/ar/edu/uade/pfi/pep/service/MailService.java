@@ -116,6 +116,8 @@ public class MailService {
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());
 			break;
+		default:
+			break;
 		}
 
 		this.sendMail(user.getUsername(), subject, body);

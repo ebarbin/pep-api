@@ -14,6 +14,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(this.requestInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login", "/user/register",
-				"/user/request-unlock/**", "/user/activate/**", "/user/logout/**");
+				"/user/request-unlock/**", "/user/activate/**", "/user/logout/**", "/file/**");
 	}
 }
