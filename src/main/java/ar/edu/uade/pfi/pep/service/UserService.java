@@ -248,5 +248,4 @@ public class UserService {
 		existingUser.setImageId(objectId.toString());
 		return this.userRepository.save(existingUser);
 	}
-
 }

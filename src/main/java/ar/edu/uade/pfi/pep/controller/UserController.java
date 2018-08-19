@@ -51,7 +51,7 @@ public class UserController {
 			return ResponseBuilder.error(e);
 		}
 	}
-
+	
 	@PutMapping("/{username}/store-profile-image")
 	@Consumes("multipart/form-data")
 	public ResponseEntity<Response> updateProfileImage(@PathVariable("username") String username,

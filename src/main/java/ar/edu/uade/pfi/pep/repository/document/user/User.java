@@ -117,5 +117,4 @@ public class User {
 	public void setImageId(String imageId) {
 		this.imageId = imageId;
 	}
-
 }
