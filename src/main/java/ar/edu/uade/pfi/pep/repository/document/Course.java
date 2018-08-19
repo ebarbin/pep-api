@@ -13,8 +13,10 @@ public class Course {
 	private String name;
 	private String description;
 	private String code;
-	private List<Problem>problems;
-	
+	private List<Problem> problems;
+	private String instituteId;
+	private String userId;
+
 	public String getId() {
 		return id;
 	}
@@ -53,5 +55,21 @@ public class Course {
 
 	public void setProblems(List<Problem> problems) {
 		this.problems = problems;
+	}
+
+	public String getInstituteId() {
+		return instituteId;
+	}
+
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

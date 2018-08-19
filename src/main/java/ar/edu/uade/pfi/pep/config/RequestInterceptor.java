@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.UserRepository;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEventType;
@@ -21,6 +22,9 @@ public class RequestInterceptor implements HandlerInterceptor {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RequestDataHolder requestDataHolder;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -30,6 +34,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 			
 			String userame = (String) request.getHeader("username");
 			String token = (String) request.getHeader("token");
+			
 			User user = this.userRepository.findByUsername(userame);
 
 			if (user != null) {
@@ -39,6 +44,10 @@ public class RequestInterceptor implements HandlerInterceptor {
 						if (interval.toDuration().getStandardMinutes() < 10) {
 							user.getLastEvent().setDate(new Date());
 							this.userRepository.save(user);
+							
+							this.requestDataHolder.setInstituteId(user.getInstituteId());
+							this.requestDataHolder.setUserId(user.getId());
+							
 							return true;
 						} else {
 							response.getWriter().println(HttpStatus.UNAUTHORIZED.name());

@@ -9,7 +9,9 @@ public class Problem {
 	@Id
 	private String id;
 	private String name;
-
+	private String instituteId;
+	private String userId;
+	
 	public String getId() {
 		return id;
 	}
@@ -24,5 +26,21 @@ public class Problem {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getInstituteId() {
+		return instituteId;
+	}
+
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

@@ -75,12 +75,14 @@ public class UserService {
 			teacher.setUserId(user.getId());
 			this.teacherRepository.save(teacher);
 			user.getRoles().add("ROLE_TEACHER");
+			user.setInstituteId(teacher.getIntituteId());
 		}
 
 		if (student != null) {
 			student.setUserId(user.getId());
 			this.studentRepository.save(student);
 			user.getRoles().add("ROLE_STUDENT");
+			user.setInstituteId(student.getIntituteId());
 		}
 
 		user = this.userRepository.save(user);

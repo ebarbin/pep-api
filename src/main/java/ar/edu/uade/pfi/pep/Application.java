@@ -8,13 +8,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = {"ar.edu.uade.pfi.pep.repository"})
-@ComponentScan({"ar.edu.uade.pfi.pep.config", "ar.edu.uade.pfi.pep.controller", "ar.edu.uade.pfi.pep.service", })
+@EnableMongoRepositories(basePackages = { "ar.edu.uade.pfi.pep.repository" })
+@ComponentScan({ "ar.edu.uade.pfi.pep.config", "ar.edu.uade.pfi.pep.controller", "ar.edu.uade.pfi.pep.service",
+		"ar.edu.uade.pfi.pep.common", })
 public class Application {
 
-	 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 		Application.LOGGER.debug("--Application Started--");

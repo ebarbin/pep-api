@@ -21,6 +21,7 @@ public class User {
 	private String surename;
 	private List<String> roles;
 	private String imageId;
+	private String instituteId;
 
 	public String getId() {
 		return id;
@@ -116,5 +117,13 @@ public class User {
 
 	public void setImageId(String imageId) {
 		this.imageId = imageId;
+	}
+
+	public String getInstituteId() {
+		return instituteId;
+	}
+
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 }
