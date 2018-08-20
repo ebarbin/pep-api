@@ -10,7 +10,7 @@ public class Problem {
 	private String id;
 	private String name;
 	private String instituteId;
-	private String userId;
+	private Teacher teacher;
 	
 	public String getId() {
 		return id;
@@ -36,11 +36,11 @@ public class Problem {
 		this.instituteId = instituteId;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Teacher getTeacher() {
+		return teacher;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 }

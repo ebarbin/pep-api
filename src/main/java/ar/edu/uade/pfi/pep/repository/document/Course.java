@@ -15,8 +15,9 @@ public class Course {
 	private String code;
 	private List<Problem> problems;
 	private String instituteId;
-	private String userId;
-
+	private Teacher teacher;
+	private List<Student> students;
+	
 	public String getId() {
 		return id;
 	}
@@ -65,11 +66,19 @@ public class Course {
 		this.instituteId = instituteId;
 	}
 
-	public String getUserId() {
-		return userId;
+	public Teacher getTeacher() {
+		return teacher;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 }

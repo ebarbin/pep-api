@@ -3,16 +3,18 @@ package ar.edu.uade.pfi.pep.repository.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import ar.edu.uade.pfi.pep.repository.document.user.User;
+
 @Document(collection = "teacher")
 public class Teacher {
 
 	@Id
 	private String id;
 	private String intituteId;
-	private String userId;
+	private User user;
 	private String documentType;
 	private String documentNumber;
-
+	
 	public String getId() {
 		return id;
 	}
@@ -45,11 +47,11 @@ public class Teacher {
 		this.documentNumber = documentNumber;
 	}
 
-	public String getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

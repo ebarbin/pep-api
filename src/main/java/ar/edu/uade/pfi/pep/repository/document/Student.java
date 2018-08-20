@@ -2,12 +2,14 @@ package ar.edu.uade.pfi.pep.repository.document;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import ar.edu.uade.pfi.pep.repository.document.user.User;
+
 @Document(collection = "student")
 public class Student {
 
 	private String id;
 	private String intituteId;
-	private String userId;
+	private User user;
 	private String documentType;
 	private String documentNumber;
 
@@ -43,11 +45,23 @@ public class Student {
 		this.documentNumber = documentNumber;
 	}
 
-	public String getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof Student))
+			return false;
+		Student otherStudent = (Student) other;
+		return this.getId().equals(otherStudent.getId());
 	}
 }

@@ -8,6 +8,8 @@ import ar.edu.uade.pfi.pep.repository.document.Course;
 
 public interface CourseRepository extends MongoRepository<Course, String> {
 
-	List<Course> findByInstituteIdAndUserId(String instituteId, String userId);
+	List<Course> findByInstituteIdAndTeacherUserId(String instituteId, String userId);
+
+	List<Course> findByInstituteId(String instituteId);
 
 }

@@ -58,6 +58,9 @@ public class UserService {
 
 		if (teacher == null && student == null) {
 			throw new Exception("No hay persona registrada con ese tipo y nro. de documento.");
+		} else if (teacher != null && student != null) {
+			throw new Exception(
+					"La persona se encuentra registrada como alumno y como docente. Verifique los datos o contactese con la institución.");
 		}
 
 		user.setRoles(new ArrayList<String>());
@@ -72,14 +75,14 @@ public class UserService {
 		user = this.userRepository.save(user);
 
 		if (teacher != null) {
-			teacher.setUserId(user.getId());
+			teacher.setUser(user);
 			this.teacherRepository.save(teacher);
 			user.getRoles().add("ROLE_TEACHER");
 			user.setInstituteId(teacher.getIntituteId());
 		}
 
 		if (student != null) {
-			student.setUserId(user.getId());
+			student.setUser(user);
 			this.studentRepository.save(student);
 			user.getRoles().add("ROLE_STUDENT");
 			user.setInstituteId(student.getIntituteId());

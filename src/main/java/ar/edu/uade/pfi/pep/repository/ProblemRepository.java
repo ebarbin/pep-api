@@ -8,5 +8,5 @@ import ar.edu.uade.pfi.pep.repository.document.Problem;
 
 public interface ProblemRepository extends MongoRepository<Problem, String>, CustomProblemRepository {
 
-	List<Problem> findByInstituteIdAndUserId(String instituteId, String userId);
+	List<Problem> findByInstituteIdAndTeacherUserId(String instituteId, String userId);
 }

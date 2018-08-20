@@ -18,16 +18,16 @@ public class ProblemService {
 
 	@Autowired
 	private RequestDataHolder requestDataHolder;
-	
+
 	@Autowired
 	private CustomProblemRepositoryImpl customProblemRepository;
 
 	public List<Problem> findAll() {
 
-		return this.problemRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+		return this.problemRepository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
-	
+
 	public List<Problem> findByNameLike(String nameSearch) {
 		return this.customProblemRepository.findByNameLike(nameSearch);
 	}

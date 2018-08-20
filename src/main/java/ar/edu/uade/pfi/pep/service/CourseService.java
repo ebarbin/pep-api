@@ -1,5 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +9,11 @@ import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
+import ar.edu.uade.pfi.pep.repository.StudentRepository;
+import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Component
 public class CourseService {
@@ -18,16 +23,23 @@ public class CourseService {
 
 	@Autowired
 	private RequestDataHolder requestDataHolder;
-	
-	public void createCourse(Course course) {
-		course.setUserId(this.requestDataHolder.getUserId());
-		course.setInstituteId(this.requestDataHolder.getInstituteId());
 
+	@Autowired
+	private TeacherRepository teacherRepository;
+
+	@Autowired
+	private StudentRepository studentRepository;
+
+	public void createCourse(Course course) {
+		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		course.setTeacher(teacher);
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
+		course.setStudents(new ArrayList<Student>());
 		this.courseRepository.save(course);
 	}
 
 	public List<Course> findAllForTeacher() {
-		return this.courseRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+		return this.courseRepository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
@@ -38,5 +50,29 @@ public class CourseService {
 	public List<Course> deleteById(String courseId) {
 		this.courseRepository.deleteById(courseId);
 		return this.findAllForTeacher();
+	}
+
+	public void updateCourse(String courseId, Course course) {
+		this.courseRepository.save(course);
+	}
+
+	public List<Course> findAllForStudent() {
+		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
+	}
+
+	public List<Course> enroll(String courseId) {
+		Course course = this.courseRepository.findById(courseId).get();
+		Student student = this.studentRepository.findByUserId(this.requestDataHolder.getUserId());
+		course.getStudents().add(student);
+		this.courseRepository.save(course);
+		return this.findAllForStudent();
+	}
+
+	public List<Course> removeEnroll(String courseId) {
+		Course course = this.courseRepository.findById(courseId).get();
+		Student student = this.studentRepository.findByUserId(this.requestDataHolder.getUserId());
+		course.getStudents().remove(student);
+		this.courseRepository.save(course);
+		return this.findAllForStudent();
 	}
 }
