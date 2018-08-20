@@ -66,19 +66,18 @@ public class CourseService {
 		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
-	public List<Course> findEnrolledCourses() {
-		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
-
-		return student.getCourses();
-	}
-
-	public List<Course> enroll(String courseId) {
+	public List<Course> enroll(String courseId) throws Exception {
 		Course course = this.courseRepository.findById(courseId).get();
 		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
-		if (student.getCourses() == null)
+		if (student.getCourses() == null) {
 			student.setCourses(new ArrayList<Course>());
+		}
+		
+		if (student.getCourses().contains(course)) {
+			throw new Exception("Ya se encuentra inscripto a este curso.");
+		}
+			
 		student.getCourses().add(course);
 
 		this.studentRepository.save(student);
