@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 
-public interface ProblemRepository extends MongoRepository<Problem, String> {
+public interface ProblemRepository extends MongoRepository<Problem, String>, CustomProblemRepository {
 
 	List<Problem> findByInstituteIdAndUserId(String instituteId, String userId);
 }
