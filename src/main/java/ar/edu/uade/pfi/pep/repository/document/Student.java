@@ -15,6 +15,7 @@ public class Student {
 	private String documentType;
 	private String documentNumber;
 	private List<Course>courses;
+	private Course selectedCourse;
 	
 	public String getId() {
 		return id;
@@ -62,6 +63,14 @@ public class Student {
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+	}
+
+	public Course getSelectedCourse() {
+		return selectedCourse;
+	}
+
+	public void setSelectedCourse(Course selectedCourse) {
+		this.selectedCourse = selectedCourse;
 	}
 
 	@Override

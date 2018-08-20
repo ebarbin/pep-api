@@ -77,7 +77,11 @@ public class CourseService {
 		if (student.getCourses().contains(course)) {
 			throw new Exception("Ya se encuentra inscripto a este curso.");
 		}
-			
+		
+		if (student.getSelectedCourse() == null) {
+			student.setSelectedCourse(course);
+		}
+		
 		student.getCourses().add(course);
 
 		this.studentRepository.save(student);
@@ -88,7 +92,16 @@ public class CourseService {
 		Course course = this.courseRepository.findById(courseId).get();
 		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
+		
 		student.getCourses().remove(course);
+		
+		if (student.getSelectedCourse().equals(course)) {
+			if (!student.getCourses().isEmpty()) {
+				student.setSelectedCourse(student.getCourses().get(0));
+			} else {
+				student.setSelectedCourse(null);
+			}
+		}
 
 		this.studentRepository.save(student);
 		return this.findAllForStudent();
