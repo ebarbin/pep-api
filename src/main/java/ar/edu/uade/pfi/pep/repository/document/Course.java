@@ -16,7 +16,6 @@ public class Course {
 	private List<Problem> problems;
 	private String instituteId;
 	private Teacher teacher;
-	private List<Student> students;
 	
 	public String getId() {
 		return id;
@@ -73,12 +72,16 @@ public class Course {
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
-
-	public List<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<Student> students) {
-		this.students = students;
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof Course))
+			return false;
+		Course otherStudent = (Course) other;
+		return this.getId().equals(otherStudent.getId());
 	}
 }

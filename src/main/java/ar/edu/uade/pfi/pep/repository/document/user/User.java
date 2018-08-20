@@ -1,7 +1,5 @@
 package ar.edu.uade.pfi.pep.repository.document.user;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,7 +17,7 @@ public class User {
 	private String documentNumber;
 	private String name;
 	private String surename;
-	private List<String> roles;
+	private String role;
 	private String imageId;
 	private String instituteId;
 
@@ -103,12 +101,12 @@ public class User {
 		this.surename = surename;
 	}
 
-	public List<String> getRoles() {
-		return roles;
+	public String getRole() {
+		return role;
 	}
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getImageId() {

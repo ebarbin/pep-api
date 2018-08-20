@@ -10,7 +10,7 @@ public class Teacher {
 
 	@Id
 	private String id;
-	private String intituteId;
+	private String instituteId;
 	private User user;
 	private String documentType;
 	private String documentNumber;
@@ -23,12 +23,12 @@ public class Teacher {
 		this.id = id;
 	}
 
-	public String getIntituteId() {
-		return intituteId;
+	public String getInstituteId() {
+		return instituteId;
 	}
 
-	public void setIntituteId(String intituteId) {
-		this.intituteId = intituteId;
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 
 	public String getDocumentType() {

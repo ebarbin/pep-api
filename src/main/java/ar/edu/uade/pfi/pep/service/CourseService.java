@@ -34,7 +34,6 @@ public class CourseService {
 		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		course.setStudents(new ArrayList<Student>());
 		this.courseRepository.save(course);
 	}
 
@@ -48,14 +47,18 @@ public class CourseService {
 	}
 
 	public List<Course> deleteById(String courseId) throws Exception {
-		Course course = this.courseRepository.findById(courseId).get();
-		if (!course.getStudents().isEmpty()) throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
-		
+		List<Student> students = this.studentRepository.findByInstituteIdAndCoursesId(this.requestDataHolder.getInstituteId(), courseId);
+		if (!students.isEmpty())
+			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
+
 		this.courseRepository.deleteById(courseId);
 		return this.findAllForTeacher();
 	}
 
 	public void updateCourse(String courseId, Course course) {
+		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		course.setTeacher(teacher);
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.courseRepository.save(course);
 	}
 
@@ -63,19 +66,32 @@ public class CourseService {
 		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
+	public List<Course> findEnrolledCourses() {
+		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+				this.requestDataHolder.getUserId());
+
+		return student.getCourses();
+	}
+
 	public List<Course> enroll(String courseId) {
 		Course course = this.courseRepository.findById(courseId).get();
-		Student student = this.studentRepository.findByUserId(this.requestDataHolder.getUserId());
-		course.getStudents().add(student);
-		this.courseRepository.save(course);
+		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+				this.requestDataHolder.getUserId());
+		if (student.getCourses() == null)
+			student.setCourses(new ArrayList<Course>());
+		student.getCourses().add(course);
+
+		this.studentRepository.save(student);
 		return this.findAllForStudent();
 	}
 
 	public List<Course> removeEnroll(String courseId) {
 		Course course = this.courseRepository.findById(courseId).get();
-		Student student = this.studentRepository.findByUserId(this.requestDataHolder.getUserId());
-		course.getStudents().remove(student);
-		this.courseRepository.save(course);
+		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+				this.requestDataHolder.getUserId());
+		student.getCourses().remove(course);
+
+		this.studentRepository.save(student);
 		return this.findAllForStudent();
 	}
 }

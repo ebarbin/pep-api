@@ -1,6 +1,5 @@
 package ar.edu.uade.pfi.pep.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -63,7 +62,6 @@ public class UserService {
 					"La persona se encuentra registrada como alumno y como docente. Verifique los datos o contactese con la institución.");
 		}
 
-		user.setRoles(new ArrayList<String>());
 		user.setPassword(hashedPassword);
 		user.setActive(Boolean.FALSE);
 		user.setLoginAttempt(Integer.valueOf(0));
@@ -77,15 +75,15 @@ public class UserService {
 		if (teacher != null) {
 			teacher.setUser(user);
 			this.teacherRepository.save(teacher);
-			user.getRoles().add("ROLE_TEACHER");
-			user.setInstituteId(teacher.getIntituteId());
+			user.setRole("ROLE_TEACHER");
+			user.setInstituteId(teacher.getInstituteId());
 		}
 
 		if (student != null) {
 			student.setUser(user);
 			this.studentRepository.save(student);
-			user.getRoles().add("ROLE_STUDENT");
-			user.setInstituteId(student.getIntituteId());
+			user.setRole("ROLE_STUDENT");
+			user.setInstituteId(student.getInstituteId());
 		}
 
 		user = this.userRepository.save(user);

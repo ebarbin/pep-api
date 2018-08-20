@@ -100,6 +100,16 @@ public class CourseController {
 		}
 	}
 	
+	@GetMapping("/enrolled")
+	public ResponseEntity<Response> findEnrolledCourses() {
+		try {
+			return ResponseBuilder.success(this.courseService.findEnrolledCourses());
+		} catch (Exception e) {
+			CourseController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
 	@GetMapping("/{courseId}/remove-enroll")
 	public ResponseEntity<Response> removeEnroll(@PathVariable("courseId") String courseId) {
 		try {

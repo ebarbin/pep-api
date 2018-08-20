@@ -1,5 +1,7 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import ar.edu.uade.pfi.pep.repository.document.user.User;
@@ -8,11 +10,12 @@ import ar.edu.uade.pfi.pep.repository.document.user.User;
 public class Student {
 
 	private String id;
-	private String intituteId;
+	private String instituteId;
 	private User user;
 	private String documentType;
 	private String documentNumber;
-
+	private List<Course>courses;
+	
 	public String getId() {
 		return id;
 	}
@@ -21,12 +24,12 @@ public class Student {
 		this.id = id;
 	}
 
-	public String getIntituteId() {
-		return intituteId;
+	public String getInstituteId() {
+		return instituteId;
 	}
 
-	public void setIntituteId(String intituteId) {
-		this.intituteId = intituteId;
+	public void setInstituteId(String instituteId) {
+		this.instituteId = instituteId;
 	}
 
 	public String getDocumentType() {
@@ -51,6 +54,14 @@ public class Student {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
 	}
 
 	@Override
