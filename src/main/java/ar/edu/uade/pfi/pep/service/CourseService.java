@@ -47,7 +47,10 @@ public class CourseService {
 		return this.courseRepository.findById(courseId);
 	}
 
-	public List<Course> deleteById(String courseId) {
+	public List<Course> deleteById(String courseId) throws Exception {
+		Course course = this.courseRepository.findById(courseId).get();
+		if (!course.getStudents().isEmpty()) throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
+		
 		this.courseRepository.deleteById(courseId);
 		return this.findAllForTeacher();
 	}
