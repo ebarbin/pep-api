@@ -9,6 +9,7 @@ public class Problem {
 	@Id
 	private String id;
 	private String name;
+	private String explanation;
 	private String instituteId;
 	private Teacher teacher;
 	
@@ -42,5 +43,13 @@ public class Problem {
 
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
+	}
+
+	public String getExplanation() {
+		return explanation;
+	}
+
+	public void setExplanation(String explanation) {
+		this.explanation = explanation;
 	}
 }

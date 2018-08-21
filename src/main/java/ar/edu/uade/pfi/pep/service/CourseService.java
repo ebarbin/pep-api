@@ -42,6 +42,10 @@ public class CourseService {
 				this.requestDataHolder.getUserId());
 	}
 
+	public List<Course> findAllForStudent() {
+		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
+	}
+	
 	public Optional<Course> findById(String courseId) {
 		return this.courseRepository.findById(courseId);
 	}
@@ -60,10 +64,6 @@ public class CourseService {
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.courseRepository.save(course);
-	}
-
-	public List<Course> findAllForStudent() {
-		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
 	public List<Course> enroll(String courseId) throws Exception {

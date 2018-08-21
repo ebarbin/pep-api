@@ -65,6 +65,8 @@ public class MailService {
 					message.setText(bodyMessage, "utf-8", "html");
 
 					Transport.send(message);
+					MailService.LOGGER.info("Mail was sendded: to: " + to);
+
 				} catch (Exception e) {
 					MailService.LOGGER.error(e.getMessage(), e);
 				}
@@ -79,39 +81,37 @@ public class MailService {
 		String body = "";
 		switch (user.getLastEvent().getType()) {
 		case PENDING_ACTIVATION:
-			subject = "Plataforma educativa para Programar (PEP): Creación de usuario";
-			sb.append("<p>Hola!!<br></p>");
-			sb.append("<p>Has registrado un usuario en el portal. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
+			subject = "Ayuda con la activación de su cuenta de PEP";
+			sb.append("<p>Saludos del equipo de PEP,</p>");
+			sb.append(
+					"<p>Hemos recibido una solicitud para generar una cuenta de PEP asociada a esta dirección de correo electrónico. Haga clic en el enlace de abajo para activar la cuenta:</p>");
+			sb.append(
+					"<p><a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>http://localhost:4200/user/activate/{{username}}/{{token}}</a></p>");
+			sb.append(
+					"<p>Si al hacer clic en el enlace no funciona, cópielo y péguelo en la barra de dirección del explorador web. Podrá acceder con su cuenta de PEP cuando haya hecho clic en el enlace anterior.</p>");
+			sb.append(
+					"<p>Si no solicitó una cuenta de PEP, puede hacer caso omiso de de este mensaje de correo electrónico.</p>");
+			sb.append("<p>Gracias por usar PEP.</p>");
+			sb.append("<p>Attentamente,</p>");
+			sb.append("<p>El equipo de PEP - Portal Educativo de Programación</p>");
 			body = sb.toString();
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());
 			break;
 		case UNLOCK:
-			subject = "Plataforma educativa para Programar (PEP): Desbloquear usuario";
-			sb.append("<p>Hola!!<br></p>");
-			sb.append("<p>Has solicitado el desbloqueo de usuario. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
-			body = sb.toString();
-			body = body.replace("{{username}}", user.getUsername());
-			body = body.replace("{{token}}", user.getLastEvent().getToken());
-			break;
-
-		case PASSWORD_RESET:
-			subject = "Plataforma educativa para Programar (PEP): Blanqueo de contraseña";
-			sb.append("<p>Hola!!<br></p>");
-			sb.append("<p>Has solicitado el blanqueo de contraseña. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/reset/{{username}}/{{token}}'>aquí</a>.</p>");
-			body = sb.toString();
-			body = body.replace("{{username}}", user.getUsername());
-			body = body.replace("{{token}}", user.getLastEvent().getToken());
-			break;
-
-		case REQUEST_ACTIVATION:
-			subject = "Plataforma educativa para Programar (PEP): Activación de usuario";
-			sb.append("<p>Hola!!<br></p>");
-			sb.append("<p>Has solicitado la activacion del usuario. Para completar el proceso debes ");
-			sb.append("hacer click <a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>aquí</a>.</p>");
+			subject = "Ayuda con la activación de su cuenta bloqueada de PEP";
+			sb.append("<p>Saludos del equipo de PEP,</p>");
+			sb.append(
+					"<p>Hemos recibido una solicitud para activar una cuenta bloqueada de PEP asociada a esta dirección de correo electrónico. Haga clic en el enlace de abajo para activar la cuenta:</p>");
+			sb.append(
+					"<p><a href='http://localhost:4200/user/activate/{{username}}/{{token}}'>http://localhost:4200/user/activate/{{username}}/{{token}}</a></p>");
+			sb.append(
+					"<p>Si al hacer clic en el enlace no funciona, cópielo y péguelo en la barra de dirección del explorador web. Podrá acceder con su cuenta de PEP cuando haya hecho clic en el enlace anterior.</p>");
+			sb.append(
+					"<p>Si no solicitó una cuenta de PEP, puede hacer caso omiso de de este mensaje de correo electrónico.</p>");
+			sb.append("<p>Gracias por usar PEP.</p>");
+			sb.append("<p>Attentamente,</p>");
+			sb.append("<p>El equipo de PEP - Portal Educativo de Programación</p>");
 			body = sb.toString();
 			body = body.replace("{{username}}", user.getUsername());
 			body = body.replace("{{token}}", user.getLastEvent().getToken());

@@ -115,42 +115,6 @@ public class UserService {
 		}
 	}
 
-	public void requestActive(String username) throws Exception {
-
-		User existingUser = this.userRepository.findByUsername(username);
-		if (existingUser == null)
-			throw new Exception("El usuario ingresado no existe.");
-
-		if (existingUser.getActive())
-			throw new Exception("El usuario ingresado ya se encuentra activo.");
-
-		existingUser.setLastEvent(new UserAccountEvent());
-		existingUser.getLastEvent().setDate(new Date());
-		existingUser.getLastEvent().setType(UserAccountEventType.REQUEST_ACTIVATION);
-		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
-
-		this.userRepository.save(existingUser);
-		this.mailService.sendMail(existingUser);
-	}
-
-	public void requestPasswordReset(String username) throws Exception {
-
-		User existingUser = this.userRepository.findByUsername(username);
-		if (existingUser == null)
-			throw new Exception("El usuario ingresado no existe.");
-
-		if (!existingUser.getActive())
-			throw new Exception("El usuario ingresado no está activo.");
-
-		existingUser.setLastEvent(new UserAccountEvent());
-		existingUser.getLastEvent().setDate(new Date());
-		existingUser.getLastEvent().setType(UserAccountEventType.PASSWORD_RESET);
-		existingUser.getLastEvent().setToken(UUID.randomUUID().toString());
-
-		this.userRepository.save(existingUser);
-		this.mailService.sendMail(existingUser);
-	}
-
 	public void requestUnlock(String username) throws Exception {
 
 		User existingUser = this.userRepository.findByUsername(username);
