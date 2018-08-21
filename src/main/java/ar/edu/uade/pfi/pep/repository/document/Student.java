@@ -16,6 +16,7 @@ public class Student {
 	private String documentNumber;
 	private List<Course>courses;
 	private Course selectedCourse;
+	private Problem selectedProblem;
 	
 	public String getId() {
 		return id;
@@ -71,6 +72,14 @@ public class Student {
 
 	public void setSelectedCourse(Course selectedCourse) {
 		this.selectedCourse = selectedCourse;
+	}
+
+	public Problem getSelectedProblem() {
+		return selectedProblem;
+	}
+
+	public void setSelectedProblem(Problem selectedProblem) {
+		this.selectedProblem = selectedProblem;
 	}
 
 	@Override

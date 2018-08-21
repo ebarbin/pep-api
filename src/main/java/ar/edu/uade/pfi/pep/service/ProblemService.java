@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
-import ar.edu.uade.pfi.pep.repository.CustomProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
+import ar.edu.uade.pfi.pep.repository.custom.CustomProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 
 @Component

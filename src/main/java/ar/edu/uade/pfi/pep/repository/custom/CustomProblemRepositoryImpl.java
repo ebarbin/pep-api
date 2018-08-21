@@ -1,4 +1,4 @@
-package ar.edu.uade.pfi.pep.repository;
+package ar.edu.uade.pfi.pep.repository.custom;
 
 import java.util.List;
 

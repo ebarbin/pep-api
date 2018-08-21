@@ -70,6 +70,7 @@ public class CourseService {
 		Course course = this.courseRepository.findById(courseId).get();
 		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
+		
 		if (student.getCourses() == null) {
 			student.setCourses(new ArrayList<Course>());
 		}
@@ -96,6 +97,7 @@ public class CourseService {
 		student.getCourses().remove(course);
 		
 		if (student.getSelectedCourse().equals(course)) {
+			student.setSelectedProblem(null);
 			if (!student.getCourses().isEmpty()) {
 				student.setSelectedCourse(student.getCourses().get(0));
 			} else {

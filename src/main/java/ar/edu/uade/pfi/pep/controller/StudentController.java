@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
 import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.service.StudentService;
 
 @RestController
@@ -34,10 +35,20 @@ public class StudentController {
 		}
 	}
 	
-	@PutMapping("/selectedCourse")
-	public ResponseEntity<Response> updateCourseSelection(@RequestBody Course course) {
+	@PutMapping("/selected-course")
+	public ResponseEntity<Response> updateSelectedCourse(@RequestBody Course course) {
 		try {
-			return ResponseBuilder.success(this.studentService.updateCourseSelection(course));
+			return ResponseBuilder.success(this.studentService.updateSelectedCourse(course));
+		} catch (Exception e) {
+			StudentController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@PutMapping("/selected-problem")
+	public ResponseEntity<Response> updateSelectedProblem(@RequestBody Problem problem) {
+		try {
+			return ResponseBuilder.success(this.studentService.updateSelectedProblem(problem));
 		} catch (Exception e) {
 			StudentController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
