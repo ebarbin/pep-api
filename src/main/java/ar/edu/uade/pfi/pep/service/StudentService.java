@@ -25,13 +25,31 @@ public class StudentService {
 
 	public Student updateSelectedCourse(Course course) {
 		Student student = this.getStudentByUserId();
+		
+		for (Course c : student.getCourses()) {
+			if(c.equals(student.getSelectedCourse())) {
+				for(Problem p: c.getProblems()) {
+					if (p.equals(student.getSelectedProblem())) {
+						p.setSolution(student.getSelectedProblem().getSolution());
+					}
+				}
+			}
+		}
+		
 		student.setSelectedProblem(null);
 		student.setSelectedCourse(course);
 		return this.studentRepository.save(student);
 	}
 
-	public Object updateSelectedProblem(Problem problem) {
+	public Student updateSelectedProblem(Problem problem) {
 		Student student = this.getStudentByUserId();
+		
+		for (Problem p : student.getSelectedCourse().getProblems()) {
+			if(p.equals(student.getSelectedProblem())) {
+				p.setSolution(student.getSelectedProblem().getSolution());
+			}
+		}
+		
 		student.setSelectedProblem(problem);
 		return this.studentRepository.save(student);
 	}

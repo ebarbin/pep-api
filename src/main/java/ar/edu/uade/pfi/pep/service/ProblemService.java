@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
+import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
 import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.custom.CustomProblemRepositoryImpl;
+import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
@@ -26,6 +28,9 @@ public class ProblemService {
 
 	@Autowired
 	private TeacherRepository teacherRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
 
 	public List<Problem> findAll() {
 
@@ -49,7 +54,23 @@ public class ProblemService {
 		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
-		
+
 		this.problemRepository.save(problem);
+	}
+
+	public List<Problem> deleteById(String problemId) throws Exception {
+		List<Course> courses = this.courseRepository
+				.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
+
+		if (!courses.isEmpty())
+			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
+
+		this.problemRepository.deleteById(problemId);
+
+		return this.findAll();
+	}
+
+	public Problem findById(String problemId) {
+		return this.problemRepository.findById(problemId).get();
 	}
 }

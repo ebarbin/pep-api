@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.BasicDBObject;
+
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.StudentRepository;
@@ -66,7 +68,7 @@ public class CourseService {
 		this.courseRepository.save(course);
 	}
 
-	public List<Course> enroll(String courseId) throws Exception {
+	public BasicDBObject enroll(String courseId) throws Exception {
 		Course course = this.courseRepository.findById(courseId).get();
 		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
@@ -85,11 +87,17 @@ public class CourseService {
 		
 		student.getCourses().add(course);
 
-		this.studentRepository.save(student);
-		return this.findAllForStudent();
+		student = this.studentRepository.save(student);
+		List<Course> courses = this.findAllForStudent();
+		
+		BasicDBObject result = new BasicDBObject();
+		result.put("courses", courses);
+		result.put("student", student);
+		
+		return result;
 	}
 
-	public List<Course> removeEnroll(String courseId) {
+	public BasicDBObject removeEnroll(String courseId) {
 		Course course = this.courseRepository.findById(courseId).get();
 		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
@@ -105,7 +113,13 @@ public class CourseService {
 			}
 		}
 
-		this.studentRepository.save(student);
-		return this.findAllForStudent();
+		student = this.studentRepository.save(student);
+		List<Course> courses = this.findAllForStudent();
+		
+		BasicDBObject result = new BasicDBObject();
+		result.put("courses", courses);
+		result.put("student", student);
+		
+		return result;
 	}
 }

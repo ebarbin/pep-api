@@ -81,7 +81,7 @@ public class Course {
 			return true;
 		if (!(other instanceof Course))
 			return false;
-		Course otherStudent = (Course) other;
-		return this.getId().equals(otherStudent.getId());
+		Course otherCourse = (Course) other;
+		return this.getId().equals(otherCourse.getId());
 	}
 }

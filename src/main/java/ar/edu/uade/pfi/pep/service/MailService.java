@@ -108,7 +108,7 @@ public class MailService {
 			sb.append(
 					"<p>Si al hacer clic en el enlace no funciona, cópielo y péguelo en la barra de dirección del explorador web. Podrá acceder con su cuenta de PEP cuando haya hecho clic en el enlace anterior.</p>");
 			sb.append(
-					"<p>Si no solicitó una cuenta de PEP, puede hacer caso omiso de de este mensaje de correo electrónico.</p>");
+					"<p>Si no solicitó la activación de una cuenta bloqueada de PEP, puede hacer caso omiso de de este mensaje de correo electrónico.</p>");
 			sb.append("<p>Gracias por usar PEP.</p>");
 			sb.append("<p>Attentamente,</p>");
 			sb.append("<p>El equipo de PEP - Portal Educativo de Programación</p>");

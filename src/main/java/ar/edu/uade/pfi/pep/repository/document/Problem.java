@@ -12,6 +12,7 @@ public class Problem {
 	private String explanation;
 	private String instituteId;
 	private Teacher teacher;
+	private String solution;
 	
 	public String getId() {
 		return id;
@@ -51,5 +52,25 @@ public class Problem {
 
 	public void setExplanation(String explanation) {
 		this.explanation = explanation;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof Problem))
+			return false;
+		Problem otherProblem = (Problem) other;
+		return this.getId().equals(otherProblem.getId());
 	}
 }

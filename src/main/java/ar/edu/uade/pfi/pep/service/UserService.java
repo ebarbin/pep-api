@@ -60,6 +60,12 @@ public class UserService {
 		} else if (teacher != null && student != null) {
 			throw new Exception(
 					"La persona se encuentra registrada como alumno y como docente. Verifique los datos o contactese con la institución.");
+		} else if (teacher != null){
+			if (teacher.getUser() != null) 
+				throw new Exception("Ya se ha registrado el docente. Verifique los datos o contactese con la institución.");
+		} else if (student != null){
+			if (student.getUser() != null) 
+				throw new Exception("Ya se ha registrado el alumno. Verifique los datos o contactese con la institución.");
 		}
 
 		user.setPassword(hashedPassword);
