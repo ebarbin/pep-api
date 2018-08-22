@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
-import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
-import ar.edu.uade.pfi.pep.repository.StudentRepository;
-import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.custom.CustomProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
@@ -23,19 +20,19 @@ public class ProblemService {
 	private ProblemRepository problemRepository;
 
 	@Autowired
+	private CustomProblemRepositoryImpl customProblemRepository;
+	
+	@Autowired
 	private RequestDataHolder requestDataHolder;
 
 	@Autowired
-	private CustomProblemRepositoryImpl customProblemRepository;
+	private TeacherService teacherService;
 
 	@Autowired
-	private TeacherRepository teacherRepository;
-	
+	private StudentService studentService;
+
 	@Autowired
-	private CourseRepository courseRepository;
-	
-	@Autowired
-	private StudentRepository studentRepository;
+	private CourseService courseService;
 
 	public List<Problem> findAll() {
 
@@ -48,7 +45,7 @@ public class ProblemService {
 	}
 
 	public void createProblem(Problem problem) {
-		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		Teacher teacher = this.teacherService.getTeacher();
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 
@@ -56,7 +53,7 @@ public class ProblemService {
 	}
 
 	public void updateProblem(String problemId, Problem problem) {
-		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		Teacher teacher = this.teacherService.getTeacher();
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 
@@ -64,9 +61,7 @@ public class ProblemService {
 	}
 
 	public List<Problem> deleteById(String problemId) throws Exception {
-		List<Course> courses = this.courseRepository
-				.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
-
+		List<Course> courses = this.courseService.getCoursesByProblemId(problemId);
 		if (!courses.isEmpty())
 			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
 
@@ -80,10 +75,9 @@ public class ProblemService {
 	}
 
 	public Student updateSolutionProblem(String problemId, Problem problem) {
-		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
-		
+		Student student = this.studentService.getStudent();
+
 		student.getSelectedProblem().setSolution(problem.getSolution());
-		return this.studentRepository.save(student);
+		return this.studentService.update(student);
 	}
 }

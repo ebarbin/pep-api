@@ -28,7 +28,7 @@ public class StudentController {
 	@GetMapping()
 	public ResponseEntity<Response> get() {
 		try {
-			return ResponseBuilder.success(this.studentService.getStudentByUserId());
+			return ResponseBuilder.success(this.studentService.getStudent());
 		} catch (Exception e) {
 			StudentController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

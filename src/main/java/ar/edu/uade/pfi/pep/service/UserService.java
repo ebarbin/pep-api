@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
-import ar.edu.uade.pfi.pep.repository.StudentRepository;
-import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.UserRepository;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
@@ -31,11 +29,11 @@ public class UserService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private TeacherService teacherService;
 
 	@Autowired
-	private StudentRepository studentRepository;
-
+	private StudentService studentService;
+	
 	@Autowired
 	private MailService mailService;
 
@@ -50,9 +48,9 @@ public class UserService {
 
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
-		Teacher teacher = this.teacherRepository.findByDocumentTypeAndDocumentNumber(user.getDocumentType(),
+		Teacher teacher = this.teacherService.getTeacherByDocument(user.getDocumentType(),
 				user.getDocumentNumber());
-		Student student = this.studentRepository.findByDocumentTypeAndDocumentNumber(user.getDocumentType(),
+		Student student = this.studentService.getStudentByDocument(user.getDocumentType(),
 				user.getDocumentNumber());
 
 		if (teacher == null && student == null) {
@@ -80,14 +78,14 @@ public class UserService {
 
 		if (teacher != null) {
 			teacher.setUser(user);
-			this.teacherRepository.save(teacher);
+			this.teacherService.update(teacher);
 			user.setRole("ROLE_TEACHER");
 			user.setInstituteId(teacher.getInstituteId());
 		}
 
 		if (student != null) {
 			student.setUser(user);
-			this.studentRepository.save(student);
+			this.studentService.update(student);
 			user.setRole("ROLE_STUDENT");
 			user.setInstituteId(student.getInstituteId());
 		}

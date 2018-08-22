@@ -17,10 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.BasicDBObject;
+
 import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
+import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
+import ar.edu.uade.pfi.pep.service.StudentService;
+import ar.edu.uade.pfi.pep.service.TeacherService;
 import ar.edu.uade.pfi.pep.service.UserService;
 
 @RestController
@@ -31,11 +37,35 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private StudentService studentService;
+	
+	@Autowired
+	private TeacherService teacherService;
 
 	@PutMapping("/login")
 	public ResponseEntity<Response> login(@RequestBody User user) {
 		try {
-			return ResponseBuilder.success(this.userService.login(user));
+			
+			BasicDBObject result = new BasicDBObject();
+			User u = this.userService.login(user);
+			result.put("user", u);
+			
+			Student student = this.studentService.getStudent();
+			if (student != null) {
+				result.put("student", student);
+				return ResponseBuilder.success(result);
+			}
+			
+			Teacher teacher = this.teacherService.getTeacher();
+			if (teacher != null) {
+				result.put("teacher", teacher);
+				return ResponseBuilder.success(result);
+			}
+			
+			return ResponseBuilder.success(result);
+			
 		} catch (Exception e) {
 			UserController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

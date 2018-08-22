@@ -8,5 +8,5 @@ public interface TeacherRepository extends MongoRepository<Teacher, String> {
 
 	Teacher findByDocumentTypeAndDocumentNumber(String documentType, String documentNumber);
 
-	Teacher findByUserId(String userId);
+	Teacher findByInstituteIdAndUserId(String instituteId, String userId);
 }

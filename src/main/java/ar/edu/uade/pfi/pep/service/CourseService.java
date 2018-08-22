@@ -11,8 +11,6 @@ import com.mongodb.BasicDBObject;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
-import ar.edu.uade.pfi.pep.repository.StudentRepository;
-import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
@@ -27,13 +25,13 @@ public class CourseService {
 	private RequestDataHolder requestDataHolder;
 
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private TeacherService teacherService;
 
 	@Autowired
-	private StudentRepository studentRepository;
+	private StudentService studentService;
 
 	public void createCourse(Course course) {
-		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.courseRepository.save(course);
@@ -47,13 +45,13 @@ public class CourseService {
 	public List<Course> findAllForStudent() {
 		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
-	
+
 	public Optional<Course> findById(String courseId) {
 		return this.courseRepository.findById(courseId);
 	}
 
 	public List<Course> deleteById(String courseId) throws Exception {
-		List<Student> students = this.studentRepository.findByInstituteIdAndCoursesId(this.requestDataHolder.getInstituteId(), courseId);
+		List<Student> students = this.studentService.getStudentsByCourseId(courseId);
 		if (!students.isEmpty())
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
@@ -62,7 +60,7 @@ public class CourseService {
 	}
 
 	public void updateCourse(String courseId, Course course) {
-		Teacher teacher = this.teacherRepository.findByUserId(this.requestDataHolder.getUserId());
+		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.courseRepository.save(course);
@@ -70,40 +68,38 @@ public class CourseService {
 
 	public BasicDBObject enroll(String courseId) throws Exception {
 		Course course = this.courseRepository.findById(courseId).get();
-		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
-		
+		Student student = this.studentService.getStudent();
+
 		if (student.getCourses() == null) {
 			student.setCourses(new ArrayList<Course>());
 		}
-		
+
 		if (student.getCourses().contains(course)) {
 			throw new Exception("Ya se encuentra inscripto a este curso.");
 		}
-		
+
 		if (student.getSelectedCourse() == null) {
 			student.setSelectedCourse(course);
 		}
-		
+
 		student.getCourses().add(course);
 
-		student = this.studentRepository.save(student);
+		student = this.studentService.update(student);
 		List<Course> courses = this.findAllForStudent();
-		
+
 		BasicDBObject result = new BasicDBObject();
 		result.put("courses", courses);
 		result.put("student", student);
-		
+
 		return result;
 	}
 
 	public BasicDBObject removeEnroll(String courseId) {
 		Course course = this.courseRepository.findById(courseId).get();
-		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
-		
+		Student student = this.studentService.getStudent();
+
 		student.getCourses().remove(course);
-		
+
 		if (student.getSelectedCourse().equals(course)) {
 			student.setSelectedProblem(null);
 			if (!student.getCourses().isEmpty()) {
@@ -113,13 +109,17 @@ public class CourseService {
 			}
 		}
 
-		student = this.studentRepository.save(student);
+		student = this.studentService.update(student);
 		List<Course> courses = this.findAllForStudent();
-		
+
 		BasicDBObject result = new BasicDBObject();
 		result.put("courses", courses);
 		result.put("student", student);
-		
+
 		return result;
+	}
+
+	public List<Course> getCoursesByProblemId(String problemId) {
+		return this.courseRepository.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
 	}
 }

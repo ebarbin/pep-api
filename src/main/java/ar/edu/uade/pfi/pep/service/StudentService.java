@@ -1,5 +1,7 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,51 +19,62 @@ public class StudentService {
 
 	@Autowired
 	private StudentRepository studentRepository;
-	
-	public Student getStudentByUserId() {
+
+	public Student getStudent() {
 		return this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
 	public Student updateSelectedCourse(Course course) {
-		Student student = this.getStudentByUserId();
-		
+		Student student = this.getStudent();
+
 		for (Course c : student.getCourses()) {
-			if(c.equals(student.getSelectedCourse())) {
-				for(Problem p: c.getProblems()) {
+			if (c.equals(student.getSelectedCourse())) {
+				for (Problem p : c.getProblems()) {
 					if (p.equals(student.getSelectedProblem())) {
 						p.setSolution(student.getSelectedProblem().getSolution());
 					}
 				}
 			}
 		}
-		
-		student.setSelectedProblem(null);
+
+		student.setSelectedProblem(course.getProblems().get(0));
 		student.setSelectedCourse(course);
 		return this.studentRepository.save(student);
 	}
 
 	public Student updateSelectedProblem(Problem problem) {
-		Student student = this.getStudentByUserId();
-		
+		Student student = this.getStudent();
+
 		for (Course c : student.getCourses()) {
-			if(c.equals(student.getSelectedCourse())) {
-				for (Problem p: c.getProblems()) {
+			if (c.equals(student.getSelectedCourse())) {
+				for (Problem p : c.getProblems()) {
 					if (p.equals(student.getSelectedProblem())) {
 						p.setSolution(student.getSelectedProblem().getSolution());
 					}
 				}
 			}
 		}
-		
-		
+
 		for (Problem p : student.getSelectedCourse().getProblems()) {
-			if(p.equals(student.getSelectedProblem())) {
+			if (p.equals(student.getSelectedProblem())) {
 				p.setSolution(student.getSelectedProblem().getSolution());
 			}
 		}
-		
+
 		student.setSelectedProblem(problem);
 		return this.studentRepository.save(student);
+	}
+
+	public Student update(Student student) {
+		return this.studentRepository.save(student);
+	}
+
+	public List<Student> getStudentsByCourseId(String courseId) {
+		return this.studentRepository.findByInstituteIdAndCoursesId(this.requestDataHolder.getInstituteId(), courseId);
+	}
+
+	public Student getStudentByDocument(String documentType, String documentNumber) {
+		return this.studentRepository.findByDocumentTypeAndDocumentNumber(documentType, documentNumber);
 	}
 }
