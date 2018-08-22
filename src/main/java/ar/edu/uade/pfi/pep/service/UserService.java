@@ -190,6 +190,7 @@ public class UserService {
 
 	public User update(User user) {
 		User existingUser = this.userRepository.findByUsername(user.getUsername());
+		
 		existingUser.setName(user.getName());
 		existingUser.setSurename(user.getSurename());
 

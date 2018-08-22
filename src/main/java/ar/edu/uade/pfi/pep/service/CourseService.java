@@ -80,6 +80,7 @@ public class CourseService {
 
 		if (student.getSelectedCourse() == null) {
 			student.setSelectedCourse(course);
+			student.setSelectedProblem(course.getProblems().get(0));
 		}
 
 		student.getCourses().add(course);
