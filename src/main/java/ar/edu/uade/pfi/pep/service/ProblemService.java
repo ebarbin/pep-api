@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
+import ar.edu.uade.pfi.pep.repository.StudentRepository;
 import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.custom.CustomProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
+import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Component
@@ -31,6 +33,9 @@ public class ProblemService {
 	
 	@Autowired
 	private CourseRepository courseRepository;
+	
+	@Autowired
+	private StudentRepository studentRepository;
 
 	public List<Problem> findAll() {
 
@@ -72,5 +77,13 @@ public class ProblemService {
 
 	public Problem findById(String problemId) {
 		return this.problemRepository.findById(problemId).get();
+	}
+
+	public Student updateSolutionProblem(String problemId, Problem problem) {
+		Student student = this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+				this.requestDataHolder.getUserId());
+		
+		student.getSelectedProblem().setSolution(problem.getSolution());
+		return this.studentRepository.save(student);
 	}
 }

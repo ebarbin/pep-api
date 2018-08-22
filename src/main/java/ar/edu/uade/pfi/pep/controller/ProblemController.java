@@ -70,10 +70,22 @@ public class ProblemController {
 	}
 
 	@PutMapping("/{problemId}")
-	public ResponseEntity<Response> updateCourse(@PathVariable("problemId") String problemId,
+	public ResponseEntity<Response> updateProblem(@PathVariable("problemId") String problemId,
 			@RequestBody Problem problem) {
 		try {
 			this.problemService.updateProblem(problemId, problem);
+			return ResponseBuilder.success();
+		} catch (Exception e) {
+			ProblemController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@PutMapping("/update-solution/{problemId}")
+	public ResponseEntity<Response> updateSolutionProblem(@PathVariable("problemId") String problemId,
+			@RequestBody Problem problem) {
+		try {
+			this.problemService.updateSolutionProblem(problemId, problem);
 			return ResponseBuilder.success();
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);

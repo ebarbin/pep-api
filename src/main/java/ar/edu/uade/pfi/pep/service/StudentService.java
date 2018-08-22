@@ -44,6 +44,17 @@ public class StudentService {
 	public Student updateSelectedProblem(Problem problem) {
 		Student student = this.getStudentByUserId();
 		
+		for (Course c : student.getCourses()) {
+			if(c.equals(student.getSelectedCourse())) {
+				for (Problem p: c.getProblems()) {
+					if (p.equals(student.getSelectedProblem())) {
+						p.setSolution(student.getSelectedProblem().getSolution());
+					}
+				}
+			}
+		}
+		
+		
 		for (Problem p : student.getSelectedCourse().getProblems()) {
 			if(p.equals(student.getSelectedProblem())) {
 				p.setSolution(student.getSelectedProblem().getSolution());
