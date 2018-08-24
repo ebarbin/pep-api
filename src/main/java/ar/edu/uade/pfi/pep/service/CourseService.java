@@ -105,6 +105,7 @@ public class CourseService {
 			student.setSelectedProblem(null);
 			if (!student.getCourses().isEmpty()) {
 				student.setSelectedCourse(student.getCourses().get(0));
+				student.setSelectedProblem(student.getCourses().get(0).getProblems().get(0));
 			} else {
 				student.setSelectedCourse(null);
 			}
