@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import ar.edu.uade.pfi.pep.repository.document.Student;
-import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Document(collection = "consultation")
 public class Consultation {
@@ -15,7 +14,7 @@ public class Consultation {
 	private String id;
 	private String consultation;
 	private boolean wasReaded;
-	private Teacher teacherResponse;
+	private TeacherResponse teacherResponse;
 	private Student student;
 	private Date creationDate;
 
@@ -43,11 +42,11 @@ public class Consultation {
 		this.wasReaded = wasReaded;
 	}
 
-	public Teacher getTeacherResponse() {
+	public TeacherResponse getTeacherResponse() {
 		return teacherResponse;
 	}
 
-	public void setTeacherResponse(Teacher teacherResponse) {
+	public void setTeacherResponse(TeacherResponse teacherResponse) {
 		this.teacherResponse = teacherResponse;
 	}
 
