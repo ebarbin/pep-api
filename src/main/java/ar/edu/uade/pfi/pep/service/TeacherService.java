@@ -14,18 +14,18 @@ public class TeacherService {
 	private RequestDataHolder requestDataHolder;
 
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private TeacherRepository repository;
 
 	public Teacher getTeacher() {
-		return this.teacherRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+		return this.repository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
 	public Teacher getTeacherByDocument(String documentType, String documentNumber) {
-		return this.teacherRepository.findByDocumentTypeAndDocumentNumber(documentType, documentNumber);
+		return this.repository.findByDocumentTypeAndDocumentNumber(documentType, documentNumber);
 	}
 	
 	public Teacher update(Teacher teacher) {
-		return this.teacherRepository.save(teacher);
+		return this.repository.save(teacher);
 	}
 }

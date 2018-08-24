@@ -19,7 +19,7 @@ import ar.edu.uade.pfi.pep.repository.document.Teacher;
 public class CourseService {
 
 	@Autowired
-	private CourseRepository courseRepository;
+	private CourseRepository repository;
 
 	@Autowired
 	private RequestDataHolder requestDataHolder;
@@ -34,20 +34,20 @@ public class CourseService {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		this.courseRepository.save(course);
+		this.repository.save(course);
 	}
 
 	public List<Course> findAllForTeacher() {
-		return this.courseRepository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
+		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
 	public List<Course> findAllForStudent() {
-		return this.courseRepository.findByInstituteId(this.requestDataHolder.getInstituteId());
+		return this.repository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
 	public Optional<Course> findById(String courseId) {
-		return this.courseRepository.findById(courseId);
+		return this.repository.findById(courseId);
 	}
 
 	public List<Course> deleteById(String courseId) throws Exception {
@@ -55,7 +55,7 @@ public class CourseService {
 		if (!students.isEmpty())
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
-		this.courseRepository.deleteById(courseId);
+		this.repository.deleteById(courseId);
 		return this.findAllForTeacher();
 	}
 
@@ -63,11 +63,11 @@ public class CourseService {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		this.courseRepository.save(course);
+		this.repository.save(course);
 	}
 
 	public BasicDBObject enroll(String courseId) throws Exception {
-		Course course = this.courseRepository.findById(courseId).get();
+		Course course = this.repository.findById(courseId).get();
 		Student student = this.studentService.getStudent();
 
 		if (student.getCourses() == null) {
@@ -96,7 +96,7 @@ public class CourseService {
 	}
 
 	public BasicDBObject removeEnroll(String courseId) {
-		Course course = this.courseRepository.findById(courseId).get();
+		Course course = this.repository.findById(courseId).get();
 		Student student = this.studentService.getStudent();
 
 		student.getCourses().remove(course);
@@ -121,6 +121,6 @@ public class CourseService {
 	}
 
 	public List<Course> getCoursesByProblemId(String problemId) {
-		return this.courseRepository.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
+		return this.repository.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
 	}
 }

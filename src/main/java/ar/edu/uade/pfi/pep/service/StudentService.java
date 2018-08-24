@@ -18,10 +18,10 @@ public class StudentService {
 	private RequestDataHolder requestDataHolder;
 
 	@Autowired
-	private StudentRepository studentRepository;
+	private StudentRepository repository;
 
 	public Student getStudent() {
-		return this.studentRepository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
+		return this.repository.findByInstituteIdAndUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
@@ -40,7 +40,7 @@ public class StudentService {
 
 		student.setSelectedProblem(course.getProblems().get(0));
 		student.setSelectedCourse(course);
-		return this.studentRepository.save(student);
+		return this.repository.save(student);
 	}
 
 	public Student updateSelectedProblem(Problem problem) {
@@ -63,18 +63,18 @@ public class StudentService {
 		}
 
 		student.setSelectedProblem(problem);
-		return this.studentRepository.save(student);
+		return this.repository.save(student);
 	}
 
 	public Student update(Student student) {
-		return this.studentRepository.save(student);
+		return this.repository.save(student);
 	}
 
 	public List<Student> getStudentsByCourseId(String courseId) {
-		return this.studentRepository.findByInstituteIdAndCoursesId(this.requestDataHolder.getInstituteId(), courseId);
+		return this.repository.findByInstituteIdAndCoursesId(this.requestDataHolder.getInstituteId(), courseId);
 	}
 
 	public Student getStudentByDocument(String documentType, String documentNumber) {
-		return this.studentRepository.findByDocumentTypeAndDocumentNumber(documentType, documentNumber);
+		return this.repository.findByDocumentTypeAndDocumentNumber(documentType, documentNumber);
 	}
 }

@@ -17,10 +17,10 @@ import ar.edu.uade.pfi.pep.repository.document.Teacher;
 public class ProblemService {
 
 	@Autowired
-	private ProblemRepository problemRepository;
+	private ProblemRepository repository;
 
 	@Autowired
-	private CustomProblemRepositoryImpl customProblemRepository;
+	private CustomProblemRepositoryImpl customRepository;
 	
 	@Autowired
 	private RequestDataHolder requestDataHolder;
@@ -36,12 +36,12 @@ public class ProblemService {
 
 	public List<Problem> findAll() {
 
-		return this.problemRepository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
+		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
 	public List<Problem> findByNameLike(String nameSearch) {
-		return this.customProblemRepository.findByNameLike(nameSearch);
+		return this.customRepository.findByNameLike(nameSearch);
 	}
 
 	public void createProblem(Problem problem) {
@@ -49,7 +49,7 @@ public class ProblemService {
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 
-		this.problemRepository.save(problem);
+		this.repository.save(problem);
 	}
 
 	public void updateProblem(String problemId, Problem problem) {
@@ -57,7 +57,7 @@ public class ProblemService {
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 
-		this.problemRepository.save(problem);
+		this.repository.save(problem);
 	}
 
 	public List<Problem> deleteById(String problemId) throws Exception {
@@ -65,13 +65,13 @@ public class ProblemService {
 		if (!courses.isEmpty())
 			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
 
-		this.problemRepository.deleteById(problemId);
+		this.repository.deleteById(problemId);
 
 		return this.findAll();
 	}
 
 	public Problem findById(String problemId) {
-		return this.problemRepository.findById(problemId).get();
+		return this.repository.findById(problemId).get();
 	}
 
 	public Student updateSolutionProblem(String problemId, Problem problem) {
