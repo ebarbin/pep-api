@@ -10,11 +10,11 @@ public class Course {
 
 	@Id
 	private String id;
+	private String instituteId;
 	private String name;
 	private String description;
 	private String code;
 	private List<Problem> problems;
-	private String instituteId;
 	private Teacher teacher;
 	
 	public String getId() {

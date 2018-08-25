@@ -37,12 +37,12 @@ public class CourseService {
 		this.repository.save(course);
 	}
 
-	public List<Course> findAllForTeacher() {
+	public List<Course> getCoursesForTeacher() {
 		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
 				this.requestDataHolder.getUserId());
 	}
 
-	public List<Course> findAllForStudent() {
+	public List<Course> getCoursesForStudent() {
 		return this.repository.findByInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
@@ -56,7 +56,7 @@ public class CourseService {
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
 		this.repository.deleteById(courseId);
-		return this.findAllForTeacher();
+		return this.getCoursesForTeacher();
 	}
 
 	public void updateCourse(String courseId, Course course) {
@@ -86,7 +86,7 @@ public class CourseService {
 		student.getCourses().add(course);
 
 		student = this.studentService.update(student);
-		List<Course> courses = this.findAllForStudent();
+		List<Course> courses = this.getCoursesForStudent();
 
 		BasicDBObject result = new BasicDBObject();
 		result.put("courses", courses);
@@ -112,7 +112,7 @@ public class CourseService {
 		}
 
 		student = this.studentService.update(student);
-		List<Course> courses = this.findAllForStudent();
+		List<Course> courses = this.getCoursesForStudent();
 
 		BasicDBObject result = new BasicDBObject();
 		result.put("courses", courses);
