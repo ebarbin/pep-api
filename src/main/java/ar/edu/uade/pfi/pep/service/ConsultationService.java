@@ -43,7 +43,7 @@ public class ConsultationService {
 	}
 
 	public List<Consultation> getTeacherConsultations() {
-		return this.repository.findByStudentSelectedCourseTeacherUserIdOrderByCreationDateDesc(this.requestDataHolder.getUserId());
+		return this.repository.findByTeacherUserIdOrderByCreationDateDesc(this.requestDataHolder.getUserId());
 	}
 
 	public Long getTeacherUnreadedConsultations() {

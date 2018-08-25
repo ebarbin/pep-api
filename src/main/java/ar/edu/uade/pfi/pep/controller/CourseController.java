@@ -89,24 +89,4 @@ public class CourseController {
 			return ResponseBuilder.error(e);
 		}
 	}
-
-	@GetMapping("/{courseId}/enroll")
-	public ResponseEntity<Response> enroll(@PathVariable("courseId") String courseId) {
-		try {
-			return ResponseBuilder.success(this.courseService.enroll(courseId));
-		} catch (Exception e) {
-			CourseController.LOGGER.error(e.getMessage(), e);
-			return ResponseBuilder.error(e);
-		}
-	}
-	
-	@GetMapping("/{courseId}/remove-enroll")
-	public ResponseEntity<Response> removeEnroll(@PathVariable("courseId") String courseId) {
-		try {
-			return ResponseBuilder.success(this.courseService.removeEnroll(courseId));
-		} catch (Exception e) {
-			CourseController.LOGGER.error(e.getMessage(), e);
-			return ResponseBuilder.error(e);
-		}
-	}
 }

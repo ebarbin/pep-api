@@ -5,7 +5,10 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Document(collection = "consultation")
 public class Consultation {
@@ -13,11 +16,14 @@ public class Consultation {
 	@Id
 	private String id;
 	private String consultation;
+	private Student student;
+	private Course course;
+	private Teacher teacher;
+	private Problem problem;
 	private boolean wasReaded;
 	private TeacherResponse teacherResponse;
-	private Student student;
 	private Date creationDate;
-
+	  
 	public String getId() {
 		return id;
 	}
@@ -64,5 +70,29 @@ public class Consultation {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	public Problem getProblem() {
+		return problem;
+	}
+
+	public void setProblem(Problem problem) {
+		this.problem = problem;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 }

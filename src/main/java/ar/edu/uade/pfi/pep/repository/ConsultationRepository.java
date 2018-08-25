@@ -11,5 +11,5 @@ public interface ConsultationRepository extends MongoRepository<Consultation, St
 
 	List<Consultation> findByStudentUserIdOrderByCreationDateDesc(String userId);
 
-	List<Consultation> findByStudentSelectedCourseTeacherUserIdOrderByCreationDateDesc(String userId);
+	List<Consultation> findByTeacherUserIdOrderByCreationDateDesc(String userId);
 }

@@ -27,7 +27,7 @@ public class CustomConsultationRepositoryImpl implements CustomConsultationRepos
 
 	@Override
 	public Long getTeacherUnreadedConsultations() {
-		Criteria c = Criteria.where("student.selectedCourse.teacher.user.id")
+		Criteria c = Criteria.where("teacher.user.id")
 				.is(new ObjectId(this.requestDataHolder.getUserId()));
 		c.and("wasReaded").is(false);
 
