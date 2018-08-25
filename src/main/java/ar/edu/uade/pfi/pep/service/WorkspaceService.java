@@ -1,5 +1,7 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,11 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.WorkspaceRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Inscription;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Workspace;
+import ar.edu.uade.pfi.pep.repository.document.WorkspaceProblem;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
@@ -21,20 +26,6 @@ public class WorkspaceService {
 	
 	@Autowired
 	private RequestDataHolder requestDataHolder;
-	
-	public Workspace createWorkspace(Workspace workspace) {
-		
-		Example<Workspace> example = Example.of(new Workspace(workspace.getStudent(), workspace.getCourse(),
-				workspace.getCourse().getProblems().get(0), true));
-		
-		if (this.repository.findOne(example).isPresent()) {
-			workspace.setActive(false);
-		} else {
-			workspace.setActive(false);
-		}
-		
-		return this.repository.save(workspace);
-	}
 	
 	public Workspace getActiveWorkspace() {
 		Example<Workspace> example = Example.of(new Workspace(new User(this.requestDataHolder.getUserId()), true));
@@ -49,7 +40,7 @@ public class WorkspaceService {
 		this.repository.deleteByStudentAndCourse(student, course);
 	}
 
-	public void activeWorkspaceByCourse(Workspace workspace) {
+	public Workspace updateActive(Workspace workspace) {
 		
 		Example<Workspace> nextActiveExample = Example.of(new Workspace(new User(this.requestDataHolder.getUserId()), workspace.getCourse(), false));
 		Optional<Workspace> nextActiveOptional = this.repository.findOne(nextActiveExample);
@@ -65,7 +56,47 @@ public class WorkspaceService {
 		if (nextActiveOptional.isPresent()) {
 			Workspace nextActive = nextActiveOptional.get();
 			nextActive.setActive(true);
-			this.repository.save(nextActive);
+			return this.repository.save(nextActive);
 		}
+		
+		return null;
+	}
+
+	public void createWorkspaceByInscription(Inscription inscription) {
+		
+		Workspace worskpace = new Workspace();
+		worskpace.setStudent(inscription.getStudent());
+		worskpace.setCourse(inscription.getCourse());
+
+		List<WorkspaceProblem>problems = new ArrayList<WorkspaceProblem>();
+		for(Problem p : inscription.getCourse().getProblems()) {
+			problems.add(new WorkspaceProblem(p));
+		}
+		problems.get(0).setActive(true); //activo por default el primer problema.
+		worskpace.setProblems(problems);
+
+		this.repository.save(worskpace);
+	}
+
+	public void activeOtherProblem(String workspaceId, WorkspaceProblem workspaceProblem) {
+		Workspace w = this.repository.findById(workspaceId).get();
+		for(WorkspaceProblem wp : w.getProblems()) {
+			wp.setActive(false);
+			if (wp.getProblem().getId().equals(workspaceProblem.getProblem().getId())) {
+				wp.setActive(true);
+			}
+		}
+		this.repository.save(w);
+	}
+
+	public void updateSolution(String workspaceId, WorkspaceProblem workspaceProblem) {
+		Workspace w = this.repository.findById(workspaceId).get();
+		for(WorkspaceProblem wp : w.getProblems()) {
+			if (wp.getProblem().getId().equals(workspaceProblem.getProblem().getId())) {
+				wp.setSolution(workspaceProblem.getSolution());
+				break;
+			}
+		}
+		this.repository.save(w);
 	}
 }

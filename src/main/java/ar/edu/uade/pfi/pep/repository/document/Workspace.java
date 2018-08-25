@@ -1,5 +1,7 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +15,7 @@ public class Workspace {
 	
 	private Student student;
 	
-	private Problem problem;
+	private List<WorkspaceProblem> problems;
 	
 	private Course course;
 	
@@ -43,13 +45,6 @@ public class Workspace {
 		this.active = active;
 	}
 	
-	public Workspace(Student student, Course course, Problem problem, boolean active) {
-		this.student = student;
-		this.problem = problem;
-		this.course = course;
-		this.active = active;
-	}
-	
 	public String getId() {
 		return id;
 	}
@@ -64,14 +59,6 @@ public class Workspace {
 
 	public void setStudent(Student student) {
 		this.student = student;
-	}
-
-	public Problem getProblem() {
-		return problem;
-	}
-
-	public void setProblem(Problem problem) {
-		this.problem = problem;
 	}
 
 	public Course getCourse() {
@@ -97,4 +84,13 @@ public class Workspace {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+	public List<WorkspaceProblem> getProblems() {
+		return problems;
+	}
+
+	public void setProblems(List<WorkspaceProblem> problems) {
+		this.problems = problems;
+	}
 }
+

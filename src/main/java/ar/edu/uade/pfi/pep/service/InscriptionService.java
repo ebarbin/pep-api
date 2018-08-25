@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.InscriptionRepository;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
-import ar.edu.uade.pfi.pep.repository.document.Workspace;
 
 @Component
 public class InscriptionService {
@@ -25,11 +24,14 @@ public class InscriptionService {
 
 	public Inscription createInscription(Inscription inscription) {
 		
-		this.workspaceService.createWorkspace(new Workspace(inscription.getStudent(), inscription.getCourse(),
-				inscription.getCourse().getProblems().get(0), false));
-		
 		inscription.setInscriptionDate(new Date());
-		return this.repository.save(inscription);
+		inscription = this.repository.save(inscription);
+		
+		this.workspaceService.createWorkspaceByInscription(inscription);
+		/*new Workspace(inscription.getStudent(), inscription.getCourse(),
+				inscription.getCourse().getProblems().get(0), false));*/
+		
+		return inscription;
 	}
 
 	public void deleteInscription(String inscriptionId) {
