@@ -81,4 +81,8 @@ public class ConsultationService {
 		this.repository.save(consultation);
 	}
 
+	public void deleteById(String consultationId) {
+		this.repository.deleteById(consultationId);
+	}
+
 }
