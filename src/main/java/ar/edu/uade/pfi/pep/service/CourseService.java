@@ -56,13 +56,12 @@ public class CourseService {
 		return this.repository.findById(courseId);
 	}
 
-	public List<Course> deleteById(String courseId) throws Exception {
+	public void deleteById(String courseId) throws Exception {
 		boolean  hasInscriptionsWithCourseId = this.inscriptionService.hasInscriptionsWithCourseId(courseId);
 		if (hasInscriptionsWithCourseId)
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
 		this.repository.deleteById(courseId);
-		return this.getCoursesForTeacher();
 	}
 
 	public void updateCourse(String courseId, Course course) {

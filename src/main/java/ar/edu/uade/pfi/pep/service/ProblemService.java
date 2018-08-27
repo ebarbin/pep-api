@@ -10,7 +10,6 @@ import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
 import ar.edu.uade.pfi.pep.repository.custom.ProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
-import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
@@ -28,9 +27,6 @@ public class ProblemService {
 
 	@Autowired
 	private TeacherService teacherService;
-
-	@Autowired
-	private StudentService studentService;
 
 	@Autowired
 	private CourseService courseService;
@@ -61,24 +57,16 @@ public class ProblemService {
 		this.repository.save(problem);
 	}
 
-	public List<Problem> deleteById(String problemId) throws Exception {
+	public void deleteById(String problemId) throws Exception {
 		boolean hasCoursesByProblemId = this.courseService.hasCoursesByProblemId(problemId);
 		if (hasCoursesByProblemId)
 			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
 
 		this.repository.deleteById(problemId);
-
-		return this.findAll();
 	}
 
 	public Problem findById(String problemId) {
 		return this.repository.findById(problemId).get();
 	}
 
-	public Student updateSolutionProblem(String problemId, Problem problem) {
-		Student student = this.studentService.getStudent();
-
-		student.getSelectedProblem().setSolution(problem.getSolution());
-		return this.studentService.update(student);
-	}
 }

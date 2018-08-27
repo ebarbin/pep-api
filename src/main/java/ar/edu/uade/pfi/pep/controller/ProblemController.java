@@ -26,12 +26,12 @@ public class ProblemController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProblemController.class);
 
 	@Autowired
-	private ProblemService problemService;
+	private ProblemService service;
 
 	@GetMapping("/like")
 	public ResponseEntity<Response> findByNameLike(@RequestParam("nameSearch") String nameSearch) {
 		try {
-			return ResponseBuilder.success(this.problemService.findByNameLike(nameSearch));
+			return ResponseBuilder.success(this.service.findByNameLike(nameSearch));
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
@@ -41,7 +41,7 @@ public class ProblemController {
 	@GetMapping
 	public ResponseEntity<Response> findAll() {
 		try {
-			return ResponseBuilder.success(this.problemService.findAll());
+			return ResponseBuilder.success(this.service.findAll());
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
@@ -51,7 +51,7 @@ public class ProblemController {
 	@GetMapping("/{problemId}")
 	public ResponseEntity<Response> findById(@PathVariable("problemId") String problemId) {
 		try {
-			return ResponseBuilder.success(this.problemService.findById(problemId));
+			return ResponseBuilder.success(this.service.findById(problemId));
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
@@ -61,7 +61,7 @@ public class ProblemController {
 	@PostMapping
 	public ResponseEntity<Response> createProblem(@RequestBody Problem problem) {
 		try {
-			this.problemService.createProblem(problem);
+			this.service.createProblem(problem);
 			return ResponseBuilder.success();
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
@@ -73,19 +73,7 @@ public class ProblemController {
 	public ResponseEntity<Response> updateProblem(@PathVariable("problemId") String problemId,
 			@RequestBody Problem problem) {
 		try {
-			this.problemService.updateProblem(problemId, problem);
-			return ResponseBuilder.success();
-		} catch (Exception e) {
-			ProblemController.LOGGER.error(e.getMessage(), e);
-			return ResponseBuilder.error(e);
-		}
-	}
-	
-	@PutMapping("/update-solution/{problemId}")
-	public ResponseEntity<Response> updateSolutionProblem(@PathVariable("problemId") String problemId,
-			@RequestBody Problem problem) {
-		try {
-			this.problemService.updateSolutionProblem(problemId, problem);
+			this.service.updateProblem(problemId, problem);
 			return ResponseBuilder.success();
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
@@ -96,7 +84,8 @@ public class ProblemController {
 	@DeleteMapping("/{problemId}")
 	public ResponseEntity<Response> deleteById(@PathVariable("problemId") String problemId) {
 		try {
-			return ResponseBuilder.success(this.problemService.deleteById(problemId));
+			this.service.deleteById(problemId);
+			return ResponseBuilder.success();
 		} catch (Exception e) {
 			ProblemController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

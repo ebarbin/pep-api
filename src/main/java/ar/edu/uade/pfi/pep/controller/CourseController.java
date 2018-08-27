@@ -83,7 +83,8 @@ public class CourseController {
 	@DeleteMapping("/{courseId}")
 	public ResponseEntity<Response> deleteById(@PathVariable("courseId") String courseId) {
 		try {
-			return ResponseBuilder.success(this.courseService.deleteById(courseId));
+			this.courseService.deleteById(courseId);
+			return ResponseBuilder.success();
 		} catch (Exception e) {
 			CourseController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

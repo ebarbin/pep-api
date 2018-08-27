@@ -1,5 +1,7 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +14,7 @@ public class Problem {
 	private String explanation;
 	private String instituteId;
 	private Teacher teacher;
-	private String solution;
+	private List<Primitive>primitives;
 	
 	public Problem() {}
 	
@@ -64,14 +66,14 @@ public class Problem {
 		this.explanation = explanation;
 	}
 
-	public String getSolution() {
-		return solution;
+	public List<Primitive> getPrimitives() {
+		return primitives;
 	}
 
-	public void setSolution(String solution) {
-		this.solution = solution;
+	public void setPrimitives(List<Primitive> primitives) {
+		this.primitives = primitives;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (other == null)
