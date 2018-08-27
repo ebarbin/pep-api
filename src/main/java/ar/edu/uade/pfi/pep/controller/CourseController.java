@@ -51,9 +51,9 @@ public class CourseController {
 	}
 
 	@GetMapping("/forTeacher")
-	public ResponseEntity<Response> findAllForTeacher() {
+	public ResponseEntity<Response> getCoursesForTeacher() {
 		try {
-			return ResponseBuilder.success(this.courseService.findAllForTeacher());
+			return ResponseBuilder.success(this.courseService.getCoursesForTeacher());
 		} catch (Exception e) {
 			CourseController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
@@ -61,9 +61,9 @@ public class CourseController {
 	}
 
 	@GetMapping("/forStudent")
-	public ResponseEntity<Response> findAllForStudent() {
+	public ResponseEntity<Response> getCoursesForStudent() {
 		try {
-			return ResponseBuilder.success(this.courseService.findAllForStudent());
+			return ResponseBuilder.success(this.courseService.getCoursesForStudent());
 		} catch (Exception e) {
 			CourseController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
@@ -84,26 +84,6 @@ public class CourseController {
 	public ResponseEntity<Response> deleteById(@PathVariable("courseId") String courseId) {
 		try {
 			return ResponseBuilder.success(this.courseService.deleteById(courseId));
-		} catch (Exception e) {
-			CourseController.LOGGER.error(e.getMessage(), e);
-			return ResponseBuilder.error(e);
-		}
-	}
-
-	@GetMapping("/{courseId}/enroll")
-	public ResponseEntity<Response> enroll(@PathVariable("courseId") String courseId) {
-		try {
-			return ResponseBuilder.success(this.courseService.enroll(courseId));
-		} catch (Exception e) {
-			CourseController.LOGGER.error(e.getMessage(), e);
-			return ResponseBuilder.error(e);
-		}
-	}
-	
-	@GetMapping("/{courseId}/remove-enroll")
-	public ResponseEntity<Response> removeEnroll(@PathVariable("courseId") String courseId) {
-		try {
-			return ResponseBuilder.success(this.courseService.removeEnroll(courseId));
 		} catch (Exception e) {
 			CourseController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);

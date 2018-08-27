@@ -5,7 +5,10 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Document(collection = "consultation")
 public class Consultation {
@@ -13,11 +16,24 @@ public class Consultation {
 	@Id
 	private String id;
 	private String consultation;
-	private boolean wasReaded;
-	private TeacherResponse teacherResponse;
 	private Student student;
+	private Course course;
+	private Teacher teacher;
+	private Problem problem;
+	private Boolean wasReaded;
+	private TeacherResponse teacherResponse;
 	private Date creationDate;
-
+	 
+	public Consultation() {}
+	
+	public Consultation(Teacher teacher) {
+		this.teacher = teacher;
+	}
+	
+	public Consultation(Student student) {
+		this.student = student;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -34,11 +50,11 @@ public class Consultation {
 		this.consultation = consultation;
 	}
 
-	public boolean isWasReaded() {
+	public Boolean getWasReaded() {
 		return wasReaded;
 	}
 
-	public void setWasReaded(boolean wasReaded) {
+	public void setWasReaded(Boolean wasReaded) {
 		this.wasReaded = wasReaded;
 	}
 
@@ -64,5 +80,29 @@ public class Consultation {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	public Problem getProblem() {
+		return problem;
+	}
+
+	public void setProblem(Problem problem) {
+		this.problem = problem;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 }

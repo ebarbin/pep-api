@@ -1,19 +1,19 @@
 package ar.edu.uade.pfi.pep.service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
-
-import com.mongodb.BasicDBObject;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
-import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class CourseService {
@@ -28,8 +28,8 @@ public class CourseService {
 	private TeacherService teacherService;
 
 	@Autowired
-	private StudentService studentService;
-
+	private InscriptionService inscriptionService;
+	
 	public void createCourse(Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
@@ -37,13 +37,19 @@ public class CourseService {
 		this.repository.save(course);
 	}
 
-	public List<Course> findAllForTeacher() {
-		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
+	public List<Course> getCoursesForTeacher() {
+		
+		Course course = new Course(new User(this.requestDataHolder.getUserId()));
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
+		Example<Course> example = Example.of(course);
+		return this.repository.findAll(example);
 	}
 
-	public List<Course> findAllForStudent() {
-		return this.repository.findByInstituteId(this.requestDataHolder.getInstituteId());
+	public List<Course> getCoursesForStudent() {
+		Course course = new Course();
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
+		Example<Course> example = Example.of(course);
+		return this.repository.findAll(example);
 	}
 
 	public Optional<Course> findById(String courseId) {
@@ -51,12 +57,12 @@ public class CourseService {
 	}
 
 	public List<Course> deleteById(String courseId) throws Exception {
-		List<Student> students = this.studentService.getStudentsByCourseId(courseId);
-		if (!students.isEmpty())
+		boolean  hasInscriptionsWithCourseId = this.inscriptionService.hasInscriptionsWithCourseId(courseId);
+		if (hasInscriptionsWithCourseId)
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
 		this.repository.deleteById(courseId);
-		return this.findAllForTeacher();
+		return this.getCoursesForTeacher();
 	}
 
 	public void updateCourse(String courseId, Course course) {
@@ -66,62 +72,10 @@ public class CourseService {
 		this.repository.save(course);
 	}
 
-	public BasicDBObject enroll(String courseId) throws Exception {
-		Course course = this.repository.findById(courseId).get();
-		Student student = this.studentService.getStudent();
-
-		if (student.getCourses() == null) {
-			student.setCourses(new ArrayList<Course>());
-		}
-
-		if (student.getCourses().contains(course)) {
-			throw new Exception("Ya se encuentra inscripto a este curso.");
-		}
-
-		if (student.getSelectedCourse() == null) {
-			student.setSelectedCourse(course);
-			student.setSelectedProblem(course.getProblems().get(0));
-		}
-
-		student.getCourses().add(course);
-
-		student = this.studentService.update(student);
-		List<Course> courses = this.findAllForStudent();
-
-		BasicDBObject result = new BasicDBObject();
-		result.put("courses", courses);
-		result.put("student", student);
-
-		return result;
-	}
-
-	public BasicDBObject removeEnroll(String courseId) {
-		Course course = this.repository.findById(courseId).get();
-		Student student = this.studentService.getStudent();
-
-		student.getCourses().remove(course);
-
-		if (student.getSelectedCourse().equals(course)) {
-			student.setSelectedProblem(null);
-			if (!student.getCourses().isEmpty()) {
-				student.setSelectedCourse(student.getCourses().get(0));
-				student.setSelectedProblem(student.getCourses().get(0).getProblems().get(0));
-			} else {
-				student.setSelectedCourse(null);
-			}
-		}
-
-		student = this.studentService.update(student);
-		List<Course> courses = this.findAllForStudent();
-
-		BasicDBObject result = new BasicDBObject();
-		result.put("courses", courses);
-		result.put("student", student);
-
-		return result;
-	}
-
-	public List<Course> getCoursesByProblemId(String problemId) {
-		return this.repository.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
+	public boolean hasCoursesByProblemId(String problemId) {
+		Course course = new Course(new User(this.requestDataHolder.getUserId()));
+		course.setProblems(Arrays.asList(new Problem(problemId)));
+		
+		return this.repository.count(Example.of(course)) > 0;
 	}
 }

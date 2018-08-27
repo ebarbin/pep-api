@@ -5,17 +5,29 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import ar.edu.uade.pfi.pep.repository.document.user.User;
+
 @Document(collection = "course")
 public class Course {
 
 	@Id
 	private String id;
+	private String instituteId;
 	private String name;
 	private String description;
 	private String code;
 	private List<Problem> problems;
-	private String instituteId;
 	private Teacher teacher;
+	
+	public Course() {}
+	
+	public Course(User u) {
+		this.teacher = new Teacher(u);
+	}
+	
+	public Course(String id) {
+		this.id = id;
+	}
 	
 	public String getId() {
 		return id;

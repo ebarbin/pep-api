@@ -21,6 +21,12 @@ public class User {
 	private String imageId;
 	private String instituteId;
 
+	public User() {}
+	
+	public User(String userId) {
+		this.id = userId;
+	}
+	
 	public String getId() {
 		return id;
 	}
