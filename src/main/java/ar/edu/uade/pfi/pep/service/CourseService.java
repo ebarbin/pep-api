@@ -1,6 +1,5 @@
 package ar.edu.uade.pfi.pep.service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
-import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
@@ -29,7 +27,7 @@ public class CourseService {
 
 	@Autowired
 	private InscriptionService inscriptionService;
-	
+
 	public void createCourse(Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
@@ -38,7 +36,7 @@ public class CourseService {
 	}
 
 	public List<Course> getCoursesForTeacher() {
-		
+
 		Course course = new Course(new User(this.requestDataHolder.getUserId()));
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		Example<Course> example = Example.of(course);
@@ -57,9 +55,8 @@ public class CourseService {
 	}
 
 	public void deleteById(String courseId) throws Exception {
-		boolean  hasInscriptionsWithCourseId = this.inscriptionService.hasInscriptionsWithCourseId(courseId);
-		if (hasInscriptionsWithCourseId)
-			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
+		if (this.inscriptionService.hasInscriptionsWithCourseId(courseId))
+			throw new Exception("No se puede eliminar el curso pues hay alumnos inscriptos.");
 
 		this.repository.deleteById(courseId);
 	}
@@ -72,9 +69,7 @@ public class CourseService {
 	}
 
 	public boolean hasCoursesByProblemId(String problemId) {
-		Course course = new Course(new User(this.requestDataHolder.getUserId()));
-		course.setProblems(Arrays.asList(new Problem(problemId)));
-		
-		return this.repository.count(Example.of(course)) > 0;
+		return !this.repository.findByTeacherUserIdAndProblemsId(this.requestDataHolder.getUserId(), problemId)
+				.isEmpty();
 	}
 }

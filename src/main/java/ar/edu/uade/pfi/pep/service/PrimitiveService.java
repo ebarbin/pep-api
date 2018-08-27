@@ -27,6 +27,9 @@ public class PrimitiveService {
 	private TeacherService teacherService;
 
 	@Autowired
+	private ProblemService problemService;
+	
+	@Autowired
 	private RequestDataHolder requestDataHolder;
 
 	public List<Primitive> getPrimitives() {
@@ -51,8 +54,11 @@ public class PrimitiveService {
 		this.repository.save(primitive);
 	}
 
-	public void deleteById(String primitiveId) {
-		//TODO validar si la primitiva esta en algun ejercicio...
+	public void deleteById(String primitiveId) throws Exception {
+		
+		if (this.problemService.hasProblemsByPrimitiveId(primitiveId))
+			throw new Exception("No se puede eliminar la primitiva pues hay ejercicios que la usan.");
+		
 		this.repository.deleteById(primitiveId);
 	}
 

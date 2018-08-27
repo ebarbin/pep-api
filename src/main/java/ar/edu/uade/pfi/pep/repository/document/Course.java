@@ -21,6 +21,10 @@ public class Course {
 	
 	public Course() {}
 	
+	public Course(Teacher t) {
+		this.teacher = t;
+	}
+	
 	public Course(User u) {
 		this.teacher = new Teacher(u);
 	}

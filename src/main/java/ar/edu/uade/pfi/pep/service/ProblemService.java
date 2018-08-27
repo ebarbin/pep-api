@@ -58,8 +58,7 @@ public class ProblemService {
 	}
 
 	public void deleteById(String problemId) throws Exception {
-		boolean hasCoursesByProblemId = this.courseService.hasCoursesByProblemId(problemId);
-		if (hasCoursesByProblemId)
+		if (this.courseService.hasCoursesByProblemId(problemId))
 			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
 
 		this.repository.deleteById(problemId);
@@ -67,6 +66,11 @@ public class ProblemService {
 
 	public Problem findById(String problemId) {
 		return this.repository.findById(problemId).get();
+	}
+
+	public boolean hasProblemsByPrimitiveId(String primitiveId) {
+		return !this.repository.findByTeacherUserIdAndPrimitivesId(this.requestDataHolder.getUserId(), primitiveId)
+				.isEmpty();
 	}
 
 }

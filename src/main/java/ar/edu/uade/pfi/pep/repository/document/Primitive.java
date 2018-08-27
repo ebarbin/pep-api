@@ -17,6 +17,10 @@ public class Primitive {
 		
 	}
 
+	public Primitive(String id) {
+		this.id = id;
+	}
+	
 	public Primitive(Teacher teacher) {
 		this.teacher = teacher;
 	}
