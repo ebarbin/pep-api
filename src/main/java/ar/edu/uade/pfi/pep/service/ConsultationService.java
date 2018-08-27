@@ -77,7 +77,6 @@ public class ConsultationService {
 	}
 
 	public void sendResponse(Consultation consultation) {
-		consultation.setWasReaded(Boolean.TRUE);
 		consultation.getTeacherResponse().setWasReaded(Boolean.FALSE);
 		this.repository.save(consultation);
 	}
