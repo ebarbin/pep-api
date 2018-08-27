@@ -20,10 +20,20 @@ public class Consultation {
 	private Course course;
 	private Teacher teacher;
 	private Problem problem;
-	private boolean wasReaded;
+	private Boolean wasReaded;
 	private TeacherResponse teacherResponse;
 	private Date creationDate;
-	  
+	 
+	public Consultation() {}
+	
+	public Consultation(Teacher teacher) {
+		this.teacher = teacher;
+	}
+	
+	public Consultation(Student student) {
+		this.student = student;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -40,11 +50,11 @@ public class Consultation {
 		this.consultation = consultation;
 	}
 
-	public boolean isWasReaded() {
+	public Boolean getWasReaded() {
 		return wasReaded;
 	}
 
-	public void setWasReaded(boolean wasReaded) {
+	public void setWasReaded(Boolean wasReaded) {
 		this.wasReaded = wasReaded;
 	}
 

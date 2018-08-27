@@ -3,7 +3,7 @@ package ar.edu.uade.pfi.pep.repository.document.consultation;
 public class TeacherResponse {
 
 	private String response;
-	private boolean wasReaded;
+	private Boolean wasReaded;
 
 	public String getResponse() {
 		return response;
@@ -13,11 +13,11 @@ public class TeacherResponse {
 		this.response = response;
 	}
 
-	public boolean isWasReaded() {
+	public Boolean getWasReaded() {
 		return wasReaded;
 	}
 
-	public void setWasReaded(boolean wasReaded) {
+	public void setWasReaded(Boolean wasReaded) {
 		this.wasReaded = wasReaded;
 	}
 

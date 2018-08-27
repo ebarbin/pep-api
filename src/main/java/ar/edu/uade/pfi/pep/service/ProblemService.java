@@ -3,15 +3,16 @@ package ar.edu.uade.pfi.pep.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
-import ar.edu.uade.pfi.pep.repository.custom.CustomProblemRepositoryImpl;
-import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.custom.ProblemRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class ProblemService {
@@ -20,8 +21,8 @@ public class ProblemService {
 	private ProblemRepository repository;
 
 	@Autowired
-	private CustomProblemRepositoryImpl customRepository;
-	
+	private ProblemRepositoryImpl customRepository;
+
 	@Autowired
 	private RequestDataHolder requestDataHolder;
 
@@ -36,8 +37,8 @@ public class ProblemService {
 
 	public List<Problem> findAll() {
 
-		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
+		Problem problem = new Problem(new Teacher(new User(this.requestDataHolder.getUserId())));
+		return this.repository.findAll(Example.of(problem));
 	}
 
 	public List<Problem> findByNameLike(String nameSearch) {
@@ -61,8 +62,8 @@ public class ProblemService {
 	}
 
 	public List<Problem> deleteById(String problemId) throws Exception {
-		List<Course> courses = this.courseService.getCoursesByProblemId(problemId);
-		if (!courses.isEmpty())
+		boolean hasCoursesByProblemId = this.courseService.hasCoursesByProblemId(problemId);
+		if (hasCoursesByProblemId)
 			throw new Exception("No se pude eliminar el ejercicio pues forma parte de uno o más cursos.");
 
 		this.repository.deleteById(problemId);

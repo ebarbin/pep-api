@@ -1,16 +1,19 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
-import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class CourseService {
@@ -25,8 +28,8 @@ public class CourseService {
 	private TeacherService teacherService;
 
 	@Autowired
-	private StudentService studentService;
-
+	private InscriptionService inscriptionService;
+	
 	public void createCourse(Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
@@ -35,12 +38,18 @@ public class CourseService {
 	}
 
 	public List<Course> getCoursesForTeacher() {
-		return this.repository.findByInstituteIdAndTeacherUserId(this.requestDataHolder.getInstituteId(),
-				this.requestDataHolder.getUserId());
+		
+		Course course = new Course(new User(this.requestDataHolder.getUserId()));
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
+		Example<Course> example = Example.of(course);
+		return this.repository.findAll(example);
 	}
 
 	public List<Course> getCoursesForStudent() {
-		return this.repository.findByInstituteId(this.requestDataHolder.getInstituteId());
+		Course course = new Course();
+		course.setInstituteId(this.requestDataHolder.getInstituteId());
+		Example<Course> example = Example.of(course);
+		return this.repository.findAll(example);
 	}
 
 	public Optional<Course> findById(String courseId) {
@@ -48,8 +57,8 @@ public class CourseService {
 	}
 
 	public List<Course> deleteById(String courseId) throws Exception {
-		List<Student> students = this.studentService.getStudentsByCourseId(courseId);
-		if (!students.isEmpty())
+		boolean  hasInscriptionsWithCourseId = this.inscriptionService.hasInscriptionsWithCourseId(courseId);
+		if (hasInscriptionsWithCourseId)
 			throw new Exception("No se pude eliminar el curso pues hay alumnos inscriptos.");
 
 		this.repository.deleteById(courseId);
@@ -63,7 +72,10 @@ public class CourseService {
 		this.repository.save(course);
 	}
 
-	public List<Course> getCoursesByProblemId(String problemId) {
-		return this.repository.findByInstituteIdAndProblemsId(this.requestDataHolder.getInstituteId(), problemId);
+	public boolean hasCoursesByProblemId(String problemId) {
+		Course course = new Course(new User(this.requestDataHolder.getUserId()));
+		course.setProblems(Arrays.asList(new Problem(problemId)));
+		
+		return this.repository.count(Example.of(course)) > 0;
 	}
 }

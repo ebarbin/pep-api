@@ -14,6 +14,16 @@ public class Problem {
 	private Teacher teacher;
 	private String solution;
 	
+	public Problem() {}
+	
+	public Problem(Teacher t) {
+		this.teacher = t;
+	}
+	
+	public Problem(String id) {
+		this.id = id;
+	}
+	
 	public String getId() {
 		return id;
 	}

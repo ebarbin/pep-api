@@ -15,6 +15,12 @@ public class Teacher {
 	private String documentType;
 	private String documentNumber;
 	
+	public Teacher() {}
+	
+	public Teacher(User u) {
+		this.user = u;
+	}
+
 	public String getId() {
 		return id;
 	}

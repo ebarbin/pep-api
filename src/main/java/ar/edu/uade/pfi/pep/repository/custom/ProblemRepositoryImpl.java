@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 
-public class CustomProblemRepositoryImpl implements CustomProblemRepository {
+public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;

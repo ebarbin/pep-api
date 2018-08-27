@@ -65,9 +65,8 @@ public class WorkspaceService {
 	public void createWorkspaceByInscription(Inscription inscription) {
 		
 		Workspace worskpace = new Workspace();
-		worskpace.setStudent(inscription.getStudent());
 		worskpace.setCourse(inscription.getCourse());
-
+		worskpace.setStudent(inscription.getStudent());
 		List<WorkspaceProblem>problems = new ArrayList<WorkspaceProblem>();
 		for(Problem p : inscription.getCourse().getProblems()) {
 			problems.add(new WorkspaceProblem(p));
