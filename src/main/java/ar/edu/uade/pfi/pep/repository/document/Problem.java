@@ -14,18 +14,21 @@ public class Problem {
 	private String explanation;
 	private String instituteId;
 	private Teacher teacher;
-	private List<Primitive>primitives;
-	
-	public Problem() {}
-	
+	private String preExecution;
+	private String posExecution;
+	private List<Primitive> primitives;
+
+	public Problem() {
+	}
+
 	public Problem(Teacher t) {
 		this.teacher = t;
 	}
-	
+
 	public Problem(String id) {
 		this.id = id;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -72,6 +75,22 @@ public class Problem {
 
 	public void setPrimitives(List<Primitive> primitives) {
 		this.primitives = primitives;
+	}
+
+	public String getPreExecution() {
+		return preExecution;
+	}
+
+	public void setPreExecution(String preExecution) {
+		this.preExecution = preExecution;
+	}
+
+	public String getPosExecution() {
+		return posExecution;
+	}
+
+	public void setPosExecution(String posExecution) {
+		this.posExecution = posExecution;
 	}
 
 	@Override
