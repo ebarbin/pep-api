@@ -48,26 +48,23 @@ public class PrimitiveService {
 		this.repository.save(primitive);
 	}
 	
-	public void updateCourse(String primitiveId, Primitive primitive) {
-		Teacher teacher = this.teacherService.getTeacher();
-		primitive.setTeacher(teacher);
-		this.repository.save(primitive);
-	}
-
 	public void deleteById(String primitiveId) throws Exception {
 		
-		if (this.problemService.hasProblemsByPrimitiveId(primitiveId))
+		if (this.problemService.hasProblemsWithPrimitiveId(primitiveId))
 			throw new Exception("No se puede eliminar la primitiva pues hay ejercicios que la usan.");
 		
 		this.repository.deleteById(primitiveId);
 	}
 
 	public void updatePrimitive(String primitiveId, Primitive primitive) {
+		
 		this.repository.findById(primitiveId);
 		Teacher teacher = this.teacherService.getTeacher();
 		primitive.setTeacher(teacher);
 		this.repository.save(primitive);
 		
+		this.problemService.updateProblemsByPrimitive(primitive);
+
 	}
 
 	public List<Primitive> findByNameLike(String nameSearch) {

@@ -12,19 +12,19 @@ public class Primitive {
 	private String description;
 	private String code;
 	private Teacher teacher;
-	
+
 	public Primitive() {
-		
+
 	}
 
 	public Primitive(String id) {
 		this.id = id;
 	}
-	
+
 	public Primitive(Teacher teacher) {
 		this.teacher = teacher;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -56,10 +56,24 @@ public class Primitive {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
 	public Teacher getTeacher() {
 		return teacher;
 	}
+
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof Primitive))
+			return false;
+		Primitive otherPrimitive = (Primitive) other;
+		return this.getId().equals(otherPrimitive.getId());
 	}
 }

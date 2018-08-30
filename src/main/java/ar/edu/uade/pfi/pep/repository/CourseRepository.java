@@ -9,6 +9,6 @@ import ar.edu.uade.pfi.pep.repository.document.Course;
 
 public interface CourseRepository extends MongoRepository<Course, String>, QueryByExampleExecutor<Course> {
 
-	List<Course> findByTeacherUserIdAndProblemsId(String userId, String problemId);
+	List<Course> findByProblemsId(String problemId);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.ProblemRepository;
 import ar.edu.uade.pfi.pep.repository.custom.ProblemRepositoryImpl;
+import ar.edu.uade.pfi.pep.repository.document.Primitive;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
@@ -53,8 +54,9 @@ public class ProblemService {
 		Teacher teacher = this.teacherService.getTeacher();
 		problem.setTeacher(teacher);
 		problem.setInstituteId(this.requestDataHolder.getInstituteId());
-
 		this.repository.save(problem);
+		
+		this.courseService.updateCoursesByProblem(problem);
 	}
 
 	public void deleteById(String problemId) throws Exception {
@@ -68,9 +70,23 @@ public class ProblemService {
 		return this.repository.findById(problemId).get();
 	}
 
-	public boolean hasProblemsByPrimitiveId(String primitiveId) {
-		return !this.repository.findByTeacherUserIdAndPrimitivesId(this.requestDataHolder.getUserId(), primitiveId)
-				.isEmpty();
+	public boolean hasProblemsWithPrimitiveId(String primitiveId) {
+		return !this.repository.findByPrimitivesId(primitiveId).isEmpty();
 	}
 
+	public void updateProblemsByPrimitive(Primitive updatedPrimitive) {
+		List<Problem> problems = this.repository.findByPrimitivesId(updatedPrimitive.getId());
+		for (Problem pro : problems) {
+			for (Primitive pri : pro.getPrimitives()) {
+				if (pri.equals(updatedPrimitive)) {
+					pri.setTeacher(updatedPrimitive.getTeacher());
+					pri.setCode(updatedPrimitive.getCode());
+					pri.setDescription(updatedPrimitive.getDescription());
+					pri.setName(updatedPrimitive.getName());
+					this.repository.save(pro);
+					this.courseService.updateCoursesByProblem(pro);
+				}
+			}
+		}
+	}
 }

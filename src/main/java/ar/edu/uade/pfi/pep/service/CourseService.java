@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
@@ -69,7 +70,24 @@ public class CourseService {
 	}
 
 	public boolean hasCoursesByProblemId(String problemId) {
-		return !this.repository.findByTeacherUserIdAndProblemsId(this.requestDataHolder.getUserId(), problemId)
-				.isEmpty();
+		return !this.repository.findByProblemsId(problemId).isEmpty();
+	}
+
+	public void updateCoursesByProblem(Problem updatedProblem) {
+		List<Course>courses = this.repository.findByProblemsId(updatedProblem.getId());
+		for(Course c: courses) {
+			for (Problem p : c.getProblems()) {
+				if (p.equals(updatedProblem)) {
+					p.setExplanation(updatedProblem.getExplanation());
+					p.setName(updatedProblem.getName());
+					p.setPosExecution(updatedProblem.getPosExecution());
+					p.setPreExecution(updatedProblem.getPreExecution());
+					p.setPrimitives(updatedProblem.getPrimitives());
+					
+					this.repository.save(c);
+				}
+			}
+		}
+
 	}
 }

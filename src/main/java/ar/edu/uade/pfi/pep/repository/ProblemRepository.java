@@ -10,5 +10,5 @@ import ar.edu.uade.pfi.pep.repository.document.Problem;
 
 public interface ProblemRepository extends MongoRepository<Problem, String>, QueryByExampleExecutor<Problem>, ProblemRepositoryCustom {
 
-	List<Problem> findByTeacherUserIdAndPrimitivesId(String userId, String primitiveId);
+	List<Problem> findByPrimitivesId(String primitiveId);
 }

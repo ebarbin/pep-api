@@ -37,7 +37,7 @@ public class WorkspaceService {
 	}
 
 	public void deleteByStudentAndCourse(Student student, Course course) {
-		this.repository.deleteByStudentAndCourse(student, course);
+		this.repository.deleteByStudentIdAndCourseId(student.getId(), course.getId());
 	}
 
 	public Workspace updateActive(Workspace workspace) {
