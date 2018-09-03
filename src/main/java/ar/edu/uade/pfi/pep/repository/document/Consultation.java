@@ -1,14 +1,9 @@
-package ar.edu.uade.pfi.pep.repository.document.consultation;
+package ar.edu.uade.pfi.pep.repository.document;
 
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import ar.edu.uade.pfi.pep.repository.document.Course;
-import ar.edu.uade.pfi.pep.repository.document.Problem;
-import ar.edu.uade.pfi.pep.repository.document.Student;
-import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
 @Document(collection = "consultation")
 public class Consultation {
@@ -17,13 +12,17 @@ public class Consultation {
 	private String id;
 	private String consultation;
 	private Student student;
-	private Course course;
-	private Teacher teacher;
-	private Problem problem;
-	private Boolean wasReaded;
-	private TeacherResponse teacherResponse;
+	private Boolean wasReadedByStudent;
 	private Date creationDate;
-	 
+	private String code;
+	
+	private Course course;
+	private Problem problem;
+	
+	private Teacher teacher;
+	private Boolean wasReadedByTeacher;
+	private String teacherResponse;
+	
 	public Consultation() {}
 	
 	public Consultation(Teacher teacher) {
@@ -48,22 +47,6 @@ public class Consultation {
 
 	public void setConsultation(String consultation) {
 		this.consultation = consultation;
-	}
-
-	public Boolean getWasReaded() {
-		return wasReaded;
-	}
-
-	public void setWasReaded(Boolean wasReaded) {
-		this.wasReaded = wasReaded;
-	}
-
-	public TeacherResponse getTeacherResponse() {
-		return teacherResponse;
-	}
-
-	public void setTeacherResponse(TeacherResponse teacherResponse) {
-		this.teacherResponse = teacherResponse;
 	}
 
 	public Student getStudent() {
@@ -104,5 +87,37 @@ public class Consultation {
 
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
+	}
+
+	public Boolean getWasReadedByTeacher() {
+		return wasReadedByTeacher;
+	}
+
+	public void setWasReadedByTeacher(Boolean wasReadedByTeacher) {
+		this.wasReadedByTeacher = wasReadedByTeacher;
+	}
+
+	public String getTeacherResponse() {
+		return teacherResponse;
+	}
+
+	public void setTeacherResponse(String teacherResponse) {
+		this.teacherResponse = teacherResponse;
+	}
+
+	public Boolean getWasReadedByStudent() {
+		return wasReadedByStudent;
+	}
+
+	public void setWasReadedByStudent(Boolean wasReadedByStudent) {
+		this.wasReadedByStudent = wasReadedByStudent;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

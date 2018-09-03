@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
-import ar.edu.uade.pfi.pep.repository.document.consultation.Consultation;
+import ar.edu.uade.pfi.pep.repository.document.Consultation;
 
 public class ConsultationRepositoryImpl implements ConsultationRespositoryCustom {
 
