@@ -77,7 +77,9 @@ public class ConsultationService {
 	}
 
 	public void deleteById(String consultationId) {
-		this.repository.deleteById(consultationId);
+		Consultation c = this.repository.findById(consultationId).get();
+		c.setDeleted(true);
+		this.repository.save(c);
 	}
 
 }

@@ -8,6 +8,8 @@ public class WorkspaceProblem {
 	
 	private boolean active;
 	
+	private String state;
+	
 	public WorkspaceProblem() {}
 
 	public WorkspaceProblem(Problem problem) {
@@ -36,5 +38,13 @@ public class WorkspaceProblem {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }

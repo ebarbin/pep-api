@@ -12,27 +12,29 @@ public class Consultation {
 	private String id;
 	private String consultation;
 	private Student student;
-	private Boolean wasReadedByStudent;
+	private boolean wasReadedByStudent;
 	private Date creationDate;
 	private String code;
-	
+	private boolean deleted;
+
 	private Course course;
 	private Problem problem;
-	
+
 	private Teacher teacher;
-	private Boolean wasReadedByTeacher;
+	private boolean wasReadedByTeacher;
 	private String teacherResponse;
-	
-	public Consultation() {}
-	
+
+	public Consultation() {
+	}
+
 	public Consultation(Teacher teacher) {
 		this.teacher = teacher;
 	}
-	
+
 	public Consultation(Student student) {
 		this.student = student;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -57,12 +59,36 @@ public class Consultation {
 		this.student = student;
 	}
 
+	public boolean isWasReadedByStudent() {
+		return wasReadedByStudent;
+	}
+
+	public void setWasReadedByStudent(boolean wasReadedByStudent) {
+		this.wasReadedByStudent = wasReadedByStudent;
+	}
+
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Course getCourse() {
@@ -89,11 +115,11 @@ public class Consultation {
 		this.teacher = teacher;
 	}
 
-	public Boolean getWasReadedByTeacher() {
+	public boolean isWasReadedByTeacher() {
 		return wasReadedByTeacher;
 	}
 
-	public void setWasReadedByTeacher(Boolean wasReadedByTeacher) {
+	public void setWasReadedByTeacher(boolean wasReadedByTeacher) {
 		this.wasReadedByTeacher = wasReadedByTeacher;
 	}
 
@@ -105,19 +131,4 @@ public class Consultation {
 		this.teacherResponse = teacherResponse;
 	}
 
-	public Boolean getWasReadedByStudent() {
-		return wasReadedByStudent;
-	}
-
-	public void setWasReadedByStudent(Boolean wasReadedByStudent) {
-		this.wasReadedByStudent = wasReadedByStudent;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
 }

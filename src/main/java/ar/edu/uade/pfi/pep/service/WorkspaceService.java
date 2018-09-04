@@ -97,6 +97,7 @@ public class WorkspaceService {
 		Workspace w = this.repository.findById(workspaceId).get();
 		for (WorkspaceProblem wp : w.getProblems()) {
 			if (wp.getProblem().equals(workspaceProblem.getProblem())) {
+				wp.setState(null);
 				wp.setSolution(workspaceProblem.getSolution());
 				break;
 			}
@@ -147,5 +148,27 @@ public class WorkspaceService {
 			
 			this.repository.save(ws);
 		}
+	}
+
+	public void markProblemAsOk(String workspaceId, WorkspaceProblem workspaceProblem) {
+		Workspace w = this.repository.findById(workspaceId).get();
+		for (WorkspaceProblem wp : w.getProblems()) {
+			if (wp.getProblem().equals(workspaceProblem.getProblem())) {
+				wp.setState("OK");
+				break;
+			}
+		}
+		this.repository.save(w);
+	}
+
+	public void markProblemAsNoOk(String workspaceId, WorkspaceProblem workspaceProblem) {
+		Workspace w = this.repository.findById(workspaceId).get();
+		for (WorkspaceProblem wp : w.getProblems()) {
+			if (wp.getProblem().equals(workspaceProblem.getProblem())) {
+				wp.setState("NOOK");
+				break;
+			}
+		}
+		this.repository.save(w);
 	}
 }
