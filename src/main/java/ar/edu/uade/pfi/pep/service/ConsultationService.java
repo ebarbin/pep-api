@@ -10,10 +10,9 @@ import org.springframework.stereotype.Component;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.ConsultationRepository;
 import ar.edu.uade.pfi.pep.repository.custom.ConsultationRepositoryImpl;
+import ar.edu.uade.pfi.pep.repository.document.Consultation;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.consultation.Consultation;
-import ar.edu.uade.pfi.pep.repository.document.consultation.TeacherResponse;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
@@ -30,7 +29,7 @@ public class ConsultationService {
 	
 	public void sendConsultation(Consultation consultation) {
 		consultation.setCreationDate(new Date());
-		consultation.setWasReaded(Boolean.FALSE);
+		consultation.setWasReadedByTeacher(Boolean.FALSE);
 		this.repository.save(consultation);
 	}
 
@@ -44,19 +43,15 @@ public class ConsultationService {
 
 	public Long getStudentUnreadedResponses() {
 		Consultation consultation = new Consultation(new Student(new User(this.requestDataHolder.getUserId())));
-		consultation.setWasReaded(Boolean.TRUE);
-		
-		TeacherResponse tr = new TeacherResponse();
-		tr.setWasReaded(Boolean.FALSE);
-		
-		consultation.setTeacherResponse(tr);
+		consultation.setWasReadedByTeacher(Boolean.TRUE);
+		consultation.setWasReadedByStudent(Boolean.FALSE);
 
 		Example<Consultation> example = Example.of(consultation);
 		return this.repository.count(example);
 	}
 
 	public Long markAsReadStudentResponse(Consultation consultation) {
-		consultation.getTeacherResponse().setWasReaded(Boolean.TRUE);
+		consultation.setWasReadedByStudent(Boolean.TRUE);
 		this.repository.save(consultation);
 		return this.getStudentUnreadedResponses();
 	}
@@ -64,25 +59,27 @@ public class ConsultationService {
 	public Long getTeacherUnreadedConsultations() {
 
 		Consultation consultation = new Consultation(new Teacher(new User(this.requestDataHolder.getUserId())));
-		consultation.setWasReaded(Boolean.FALSE);
+		consultation.setWasReadedByTeacher(Boolean.FALSE);
 
 		Example<Consultation> example = Example.of(consultation);
 		return this.repository.count(example);
 	}
 
 	public Long markAsReadConsultation(Consultation consultation) {
-		consultation.setWasReaded(Boolean.TRUE);
+		consultation.setWasReadedByTeacher(Boolean.TRUE);
 		this.repository.save(consultation);
 		return this.getTeacherUnreadedConsultations();
 	}
 
 	public void sendResponse(Consultation consultation) {
-		consultation.getTeacherResponse().setWasReaded(Boolean.FALSE);
+		consultation.setWasReadedByStudent(Boolean.FALSE);
 		this.repository.save(consultation);
 	}
 
 	public void deleteById(String consultationId) {
-		this.repository.deleteById(consultationId);
+		Consultation c = this.repository.findById(consultationId).get();
+		c.setDeleted(true);
+		this.repository.save(c);
 	}
 
 }

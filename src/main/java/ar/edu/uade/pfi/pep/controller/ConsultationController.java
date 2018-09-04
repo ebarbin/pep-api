@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.uade.pfi.pep.controller.response.Response;
 import ar.edu.uade.pfi.pep.controller.response.ResponseBuilder;
-import ar.edu.uade.pfi.pep.repository.document.consultation.Consultation;
+import ar.edu.uade.pfi.pep.repository.document.Consultation;
 import ar.edu.uade.pfi.pep.service.ConsultationService;
 
 @RestController

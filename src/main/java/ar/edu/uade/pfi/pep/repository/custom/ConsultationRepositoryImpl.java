@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
-import ar.edu.uade.pfi.pep.repository.document.consultation.Consultation;
+import ar.edu.uade.pfi.pep.repository.document.Consultation;
 
 public class ConsultationRepositoryImpl implements ConsultationRespositoryCustom {
 
@@ -25,7 +25,7 @@ public class ConsultationRepositoryImpl implements ConsultationRespositoryCustom
 	public List<Consultation> getTeacherConsultations() {
 
 		Criteria c = Criteria.where("teacher.user._id").is(new ObjectId(this.requestDataHolder.getUserId()));
-		c.and("teacherResponse").exists(false);
+		c.and("teacherResponse").exists(false).and("deleted").is(false);
 
 		Query q = new Query(c);
 		q.with(new Sort(Direction.DESC, "creationDate"));
@@ -37,7 +37,7 @@ public class ConsultationRepositoryImpl implements ConsultationRespositoryCustom
 	public List<Consultation> getStudentConsultations() {
 
 		Criteria c = Criteria.where("student.user._id").is(new ObjectId(this.requestDataHolder.getUserId()));
-
+		c.and("deleted").is(false);
 		Query q = new Query(c);
 		q.with(new Sort(Direction.DESC, "creationDate"));
 

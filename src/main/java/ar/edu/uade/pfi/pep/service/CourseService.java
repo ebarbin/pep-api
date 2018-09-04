@@ -29,6 +29,9 @@ public class CourseService {
 	@Autowired
 	private InscriptionService inscriptionService;
 
+	@Autowired
+	private WorkspaceService workspaceService;
+	
 	public void createCourse(Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
@@ -66,7 +69,10 @@ public class CourseService {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		this.repository.save(course);
+		course = this.repository.save(course);
+		
+		this.inscriptionService.updateInscriptionsByCourse(course);
+		this.workspaceService.updateWorkspacesByCourse(course);
 	}
 
 	public boolean hasCoursesByProblemId(String problemId) {
@@ -88,6 +94,8 @@ public class CourseService {
 				}
 			}
 		}
-
+		
+		this.workspaceService.updateWorkspacesByProblem(updatedProblem);
+		this.inscriptionService.updateInscriptionsByProblem(updatedProblem);
 	}
 }

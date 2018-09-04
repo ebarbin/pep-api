@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import ar.edu.uade.pfi.pep.repository.custom.ConsultationRespositoryCustom;
-import ar.edu.uade.pfi.pep.repository.document.consultation.Consultation;
+import ar.edu.uade.pfi.pep.repository.document.Consultation;
 
 public interface ConsultationRepository extends MongoRepository<Consultation, String>, ConsultationRespositoryCustom,
 		QueryByExampleExecutor<Consultation> {

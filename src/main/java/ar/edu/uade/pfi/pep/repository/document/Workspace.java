@@ -25,19 +25,6 @@ public class Workspace {
 
 	public Workspace() {}
 
-	public Workspace(Student student, boolean active) {
-		this.student = student;
-		this.active = active;
-	}
-	
-	public Workspace(User user, Course course, boolean active) {
-		Student s = new Student();
-		s.setUser(user);
-		this.course = course;
-		this.student = s;
-		this.active = active;
-	}
-	
 	public Workspace(User user, boolean active) {
 		Student s = new Student();
 		s.setUser(user);
@@ -91,6 +78,24 @@ public class Workspace {
 
 	public void setProblems(List<WorkspaceProblem> problems) {
 		this.problems = problems;
+	}
+	
+	public boolean containsProblem(Problem p) {
+		for (WorkspaceProblem wp : this.problems) {
+			if (wp.getProblem().equals(p)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void updateProblem(Problem p) {
+		for (WorkspaceProblem wp : this.problems) {
+			if (wp.getProblem().equals(p)) {
+				wp.setProblem(p);
+			}
+		}
 	}
 }
 

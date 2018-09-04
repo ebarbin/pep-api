@@ -13,4 +13,8 @@ public interface WorkspaceRepository extends MongoRepository<Workspace, String>,
 
 	List<Workspace> findByStudentUserId(String userId);
 
+	List<Workspace> findByProblemsProblemId(String id);
+
+	List<Workspace> findByCourseId(String id);
+
 }

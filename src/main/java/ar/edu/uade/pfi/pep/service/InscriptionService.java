@@ -11,6 +11,7 @@ import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.InscriptionRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
@@ -55,5 +56,31 @@ public class InscriptionService {
 	public boolean hasInscriptionsWithCourseId(String courseId) {
 		Example<Inscription> example = Example.of(new Inscription(new Course(courseId)));
 		return this.repository.count(example) > 0;
+	}
+
+	public void updateInscriptionsByProblem(Problem updatedProblem) {
+		List<Inscription> inscriptions = this.repository.findByCourseProblemsId(updatedProblem.getId());
+		for (Inscription i : inscriptions) {
+			for (Problem p : i.getCourse().getProblems()) {
+				if (p.equals(updatedProblem)) {
+					p.setExplanation(updatedProblem.getExplanation());
+					p.setName(updatedProblem.getName());
+					p.setPosExecution(updatedProblem.getPosExecution());
+					p.setPreExecution(updatedProblem.getPreExecution());
+					p.setPrimitives(updatedProblem.getPrimitives());
+					p.setTeacher(updatedProblem.getTeacher());
+
+					this.repository.save(i);
+				}
+			}
+		}
+	}
+
+	public void updateInscriptionsByCourse(Course course) {
+		List<Inscription> inscriptions = this.repository.findByCourseId(course.getId());
+		for (Inscription i : inscriptions) {
+			i.setCourse(course);
+			this.repository.save(i);
+		}
 	}
 }

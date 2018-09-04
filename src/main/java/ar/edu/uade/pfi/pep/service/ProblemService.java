@@ -84,6 +84,7 @@ public class ProblemService {
 					pri.setDescription(updatedPrimitive.getDescription());
 					pri.setName(updatedPrimitive.getName());
 					this.repository.save(pro);
+					
 					this.courseService.updateCoursesByProblem(pro);
 				}
 			}
