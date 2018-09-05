@@ -133,19 +133,21 @@ public class WorkspaceService {
 					ws.getProblems().add(new WorkspaceProblem(p));
 				}
 			}
-			
+
 			List<WorkspaceProblem> wpToDelete = new ArrayList<WorkspaceProblem>();
 			boolean wasActive = false;
-			for (WorkspaceProblem wp: ws.getProblems()) {
+			for (WorkspaceProblem wp : ws.getProblems()) {
 				if (!course.getProblems().contains(wp.getProblem())) {
-					if (wp.isActive()) wasActive = true;
+					if (wp.isActive())
+						wasActive = true;
 					wpToDelete.add(wp);
 				}
 			}
-			
+
 			ws.getProblems().removeAll(wpToDelete);
-			if (wasActive) ws.getProblems().get(0).setActive(true);
-			
+			if (wasActive)
+				ws.getProblems().get(0).setActive(true);
+
 			this.repository.save(ws);
 		}
 	}
@@ -170,5 +172,9 @@ public class WorkspaceService {
 			}
 		}
 		this.repository.save(w);
+	}
+
+	public List<Workspace> getWorkspacesByCourse(String courseId) {
+		return this.repository.findByCourseId(courseId);
 	}
 }

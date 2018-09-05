@@ -10,7 +10,9 @@ import ar.edu.uade.pfi.pep.repository.document.Inscription;
 public interface InscriptionRepository
 		extends MongoRepository<Inscription, String>, QueryByExampleExecutor<Inscription> {
 
-	List<Inscription> findByCourseProblemsId(String id);
+	List<Inscription> findByCourseProblemsId(String problemId);
 
-	List<Inscription> findByCourseId(String id);
+	List<Inscription> findByCourseId(String courseId);
+
+	List<Inscription> findByCourseTeacherUserId(String userId);
 }

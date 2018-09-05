@@ -60,4 +60,16 @@ public class Teacher {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof Teacher))
+			return false;
+		Teacher otherTeacher = (Teacher) other;
+		return this.getId().equals(otherTeacher.getId());
+	}
 }

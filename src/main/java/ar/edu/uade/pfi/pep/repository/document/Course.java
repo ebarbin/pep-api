@@ -1,11 +1,10 @@
 package ar.edu.uade.pfi.pep.repository.document;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Document(collection = "course")
 public class Course {
@@ -23,10 +22,6 @@ public class Course {
 	
 	public Course(Teacher t) {
 		this.teacher = t;
-	}
-	
-	public Course(User u) {
-		this.teacher = new Teacher(u);
 	}
 	
 	public Course(String id) {
@@ -100,4 +95,9 @@ public class Course {
 		Course otherCourse = (Course) other;
 		return this.getId().equals(otherCourse.getId());
 	}
+	
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.instituteId);
+    }
 }

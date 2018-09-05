@@ -13,6 +13,7 @@ import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
+import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
@@ -82,5 +83,9 @@ public class InscriptionService {
 			i.setCourse(course);
 			this.repository.save(i);
 		}
+	}
+
+	public List<Inscription> getInscriptionsByTeacher(Teacher teacher) {
+		return this.repository.findByCourseTeacherUserId(teacher.getUser().getId());
 	}
 }

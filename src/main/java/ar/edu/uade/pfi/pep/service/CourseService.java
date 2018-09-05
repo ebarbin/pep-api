@@ -40,8 +40,8 @@ public class CourseService {
 	}
 
 	public List<Course> getCoursesForTeacher() {
-
-		Course course = new Course(new User(this.requestDataHolder.getUserId()));
+		
+		Course course = new Course(new Teacher(new User(this.requestDataHolder.getUserId())));
 		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		Example<Course> example = Example.of(course);
 		return this.repository.findAll(example);
