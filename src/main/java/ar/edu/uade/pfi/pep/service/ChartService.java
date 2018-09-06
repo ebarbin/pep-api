@@ -36,7 +36,7 @@ public class ChartService {
 	@Autowired
 	private CourseService courseService;
 
-	public List<DBObject> getStudentsForCourse() {
+	public List<DBObject> getStudentsPerCourse() {
 		Teacher teacher = new Teacher(new User(this.requestDataHolder.getUserId()));
 		List<Course> courses = this.courseService.getCoursesForTeacher();
 
@@ -66,7 +66,7 @@ public class ChartService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DBObject> getProgressStudentsForCourse(String courseId) {
+	public List<DBObject> getProgressStudentsPerCourse(String courseId) {
 		List<DBObject> results = new ArrayList<DBObject>();
 		List<Workspace> workspaces = this.workspaceService.getWorkspacesByCourse(courseId);
 

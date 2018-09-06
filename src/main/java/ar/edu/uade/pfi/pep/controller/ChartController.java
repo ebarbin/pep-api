@@ -22,20 +22,20 @@ public class ChartController {
 	@Autowired
 	private ChartService chartService;
 
-	@GetMapping("/students-for-course")
-	public ResponseEntity<Response> getStudentsForCourse() {
+	@GetMapping("/students-per-course")
+	public ResponseEntity<Response> getStudentsPerCourse() {
 		try {
-			return ResponseBuilder.success(this.chartService.getStudentsForCourse());
+			return ResponseBuilder.success(this.chartService.getStudentsPerCourse());
 		} catch (Exception e) {
 			ChartController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
 		}
 	}
 
-	@GetMapping("/progress-student-for-course/{courseId}")
-	public ResponseEntity<Response> getProgressStudentsForCourse(@PathVariable("courseId") String courseId) {
+	@GetMapping("/progress-student-per-course/{courseId}")
+	public ResponseEntity<Response> getProgressStudentsPerCourse(@PathVariable("courseId") String courseId) {
 		try {
-			return ResponseBuilder.success(this.chartService.getProgressStudentsForCourse(courseId));
+			return ResponseBuilder.success(this.chartService.getProgressStudentsPerCourse(courseId));
 		} catch (Exception e) {
 			ChartController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
