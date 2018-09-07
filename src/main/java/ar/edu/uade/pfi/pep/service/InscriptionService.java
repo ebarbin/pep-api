@@ -88,4 +88,8 @@ public class InscriptionService {
 	public List<Inscription> getInscriptionsByTeacher(Teacher teacher) {
 		return this.repository.findByCourseTeacherUserId(teacher.getUser().getId());
 	}
+	
+	public List<Inscription> getInscriptionsByCourse(Course course) {
+		return this.repository.findByCourseId(course.getId());
+	}
 }

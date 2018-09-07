@@ -2,6 +2,7 @@ package ar.edu.uade.pfi.pep.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,27 +66,61 @@ public class ChartService {
 		return results;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<DBObject> getProgressStudentsPerCourse(String courseId) {
+		
 		List<DBObject> results = new ArrayList<DBObject>();
 		List<Workspace> workspaces = this.workspaceService.getWorkspacesByCourse(courseId);
 
-		DBObject result;
+		if (workspaces.isEmpty()) return new ArrayList();
+		
+		// Creo los mapas
+		Map<String, AtomicInteger> mapSuccess = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapNon = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapFail = new LinkedHashMap<String, AtomicInteger>();
+
+		for (WorkspaceProblem wp : workspaces.get(0).getProblems()) {
+			mapSuccess.put(wp.getProblem().getId(), new AtomicInteger(0));
+			mapNon.put(wp.getProblem().getId(), new AtomicInteger(0));
+			mapFail.put(wp.getProblem().getId(), new AtomicInteger(0));
+		}
+
+		DBObject successResolucion = new BasicDBObject("label", "Correcto");
+		successResolucion.put("data", new ArrayList<Integer>());
+		results.add(successResolucion);
+		
+		DBObject nonResolucion = new BasicDBObject("label", "Sin Resolver");
+		nonResolucion.put("data", new ArrayList<Integer>());
+		results.add(nonResolucion);
+		
+		DBObject failResolucion = new BasicDBObject("label", "Incorrecto");
+		failResolucion.put("data", new ArrayList<Integer>());
+		results.add(failResolucion);
+		
 		for (Workspace ws : workspaces) {
-			result = new BasicDBObject("label",
-					ws.getStudent().getUser().getName() + " " + ws.getStudent().getUser().getSurename());
-			result.put("data", new ArrayList<Integer>());
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (Strings.isEmpty(wsp.getState())) {
-					((List<Integer>) result.get("data")).add(0);
+					mapNon.get(wsp.getProblem().getId()).incrementAndGet();
 				} else if ("OK".equals(wsp.getState())) {
-					((List<Integer>) result.get("data")).add(1);
+					mapSuccess.get(wsp.getProblem().getId()).incrementAndGet();
 				} else if ("NOOK".equals(wsp.getState())) {
-					((List<Integer>) result.get("data")).add(-1);
+					mapFail.get(wsp.getProblem().getId()).incrementAndGet();
 				}
 			}
-			results.add(result);
 		}
+		
+		for(String id : mapSuccess.keySet()) {
+			((List) successResolucion.get("data")).add(Integer.valueOf(mapSuccess.get(id).get()));
+		}
+		
+		for(String id : mapNon.keySet()) {
+			((List) nonResolucion.get("data")).add(Integer.valueOf(mapNon.get(id).get()));
+		}
+		
+		for(String id : mapFail.keySet()) {
+			((List) failResolucion.get("data")).add(Integer.valueOf(mapFail.get(id).get()));
+		}
+		
 		return results;
 	}
 

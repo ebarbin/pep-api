@@ -43,5 +43,29 @@ public class ConsultationRepositoryImpl implements ConsultationRespositoryCustom
 
 		return this.mongoTemplate.find(q, Consultation.class);
 	}
+	
+	@Override
+	public Long getStudentUnreadedResponses() {
 
+		Criteria c = Criteria.where("student.user._id").is(new ObjectId(this.requestDataHolder.getUserId()));
+		c.and("deleted").is(false).and("wasReadedByTeacher").is(true).and("wasReadedByStudent").is(false);
+		c.and("teacherResponse").exists(true);
+		
+		Query q = new Query(c);
+		q.with(new Sort(Direction.DESC, "creationDate"));
+
+		return this.mongoTemplate.count(new Query(c), Consultation.class);
+	}
+	
+	@Override
+	public Long getTeacherUnreadedConsultations() {
+
+		Criteria c = Criteria.where("teacher.user._id").is(new ObjectId(this.requestDataHolder.getUserId()));
+		c.and("deleted").is(false).and("wasReadedByTeacher").is(false);
+		
+		Query q = new Query(c);
+		q.with(new Sort(Direction.DESC, "creationDate"));
+
+		return this.mongoTemplate.count(new Query(c), Consultation.class);
+	}
 }

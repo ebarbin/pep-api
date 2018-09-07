@@ -4,16 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
-import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.ConsultationRepository;
 import ar.edu.uade.pfi.pep.repository.custom.ConsultationRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Consultation;
-import ar.edu.uade.pfi.pep.repository.document.Student;
-import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.user.User;
+import ar.edu.uade.pfi.pep.repository.document.Inscription;
 
 @Component
 public class ConsultationService {
@@ -23,10 +19,10 @@ public class ConsultationService {
 
 	@Autowired
 	private ConsultationRepositoryImpl customRepository;
-	
+
 	@Autowired
-	private RequestDataHolder requestDataHolder;
-	
+	private InscriptionService inscriptionService;
+
 	public void sendConsultation(Consultation consultation) {
 		consultation.setCreationDate(new Date());
 		consultation.setWasReadedByTeacher(Boolean.FALSE);
@@ -42,12 +38,8 @@ public class ConsultationService {
 	}
 
 	public Long getStudentUnreadedResponses() {
-		Consultation consultation = new Consultation(new Student(new User(this.requestDataHolder.getUserId())));
-		consultation.setWasReadedByTeacher(Boolean.TRUE);
-		consultation.setWasReadedByStudent(Boolean.FALSE);
 
-		Example<Consultation> example = Example.of(consultation);
-		return this.repository.count(example);
+		return this.customRepository.getStudentUnreadedResponses();
 	}
 
 	public Long markAsReadStudentResponse(Consultation consultation) {
@@ -57,12 +49,8 @@ public class ConsultationService {
 	}
 
 	public Long getTeacherUnreadedConsultations() {
-
-		Consultation consultation = new Consultation(new Teacher(new User(this.requestDataHolder.getUserId())));
-		consultation.setWasReadedByTeacher(Boolean.FALSE);
-
-		Example<Consultation> example = Example.of(consultation);
-		return this.repository.count(example);
+		
+		return this.customRepository.getTeacherUnreadedConsultations();
 	}
 
 	public Long markAsReadConsultation(Consultation consultation) {
@@ -73,7 +61,16 @@ public class ConsultationService {
 
 	public void sendResponse(Consultation consultation) {
 		consultation.setWasReadedByStudent(Boolean.FALSE);
-		this.repository.save(consultation);
+		if (consultation.getStudent() == null) {
+			List<Inscription> inscriptions = this.inscriptionService.getInscriptionsByCourse(consultation.getCourse());
+			for (Inscription i : inscriptions) {
+				consultation.setId(null);
+				consultation.setStudent(i.getStudent());
+				this.repository.save(consultation);
+			}
+		} else {
+			this.repository.save(consultation);
+		}
 	}
 
 	public void deleteById(String consultationId) {
