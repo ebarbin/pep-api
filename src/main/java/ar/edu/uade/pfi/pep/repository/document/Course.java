@@ -89,6 +89,6 @@ public class Course {
 	
     @Override
     public int hashCode() {
-        return Objects.hash(this.teacher);
+        return Objects.hash(this.teacher.getInstituteId());
     }
 }

@@ -17,6 +17,7 @@ import com.mongodb.DBObject;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
+import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.Workspace;
 import ar.edu.uade.pfi.pep.repository.document.WorkspaceProblem;
@@ -105,6 +106,65 @@ public class ChartService {
 					mapSuccess.get(wsp.getProblem().getId()).incrementAndGet();
 				} else if ("NOOK".equals(wsp.getState())) {
 					mapFail.get(wsp.getProblem().getId()).incrementAndGet();
+				}
+			}
+		}
+		
+		for(String id : mapSuccess.keySet()) {
+			((List) successResolucion.get("data")).add(Integer.valueOf(mapSuccess.get(id).get()));
+		}
+		
+		for(String id : mapNon.keySet()) {
+			((List) nonResolucion.get("data")).add(Integer.valueOf(mapNon.get(id).get()));
+		}
+		
+		for(String id : mapFail.keySet()) {
+			((List) failResolucion.get("data")).add(Integer.valueOf(mapFail.get(id).get()));
+		}
+		
+		return results;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<DBObject> getTotalProgressStudentsPerCourse(String courseId) {
+		
+		List<DBObject> results = new ArrayList<DBObject>();
+		List<Student> students = this.inscriptionService.getStudentsByCourseId(courseId);
+		List<Workspace> workspaces = this.workspaceService.getWorkspacesByCourse(courseId);
+
+		if (students.isEmpty()) return new ArrayList();
+		
+		// Creo los mapas
+		Map<String, AtomicInteger> mapSuccess = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapNon = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapFail = new LinkedHashMap<String, AtomicInteger>();
+
+		for (Student s : students) {
+			mapSuccess.put(s.getId(), new AtomicInteger(0));
+			mapNon.put(s.getId(), new AtomicInteger(0));
+			mapFail.put(s.getId(), new AtomicInteger(0));
+		}
+
+		DBObject successResolucion = new BasicDBObject("label", "Correcto");
+		successResolucion.put("data", new ArrayList<Integer>());
+		results.add(successResolucion);
+		
+		DBObject nonResolucion = new BasicDBObject("label", "Sin Resolver");
+		nonResolucion.put("data", new ArrayList<Integer>());
+		results.add(nonResolucion);
+		
+		DBObject failResolucion = new BasicDBObject("label", "Incorrecto");
+		failResolucion.put("data", new ArrayList<Integer>());
+		results.add(failResolucion);
+		
+		for (Workspace ws : workspaces) {
+			for (WorkspaceProblem wsp : ws.getProblems()) {
+				if (Strings.isEmpty(wsp.getState())) {
+					mapNon.get(ws.getStudent().getId()).incrementAndGet();
+				} else if ("OK".equals(wsp.getState())) {
+					mapSuccess.get(ws.getStudent().getId()).incrementAndGet();
+				} else if ("NOOK".equals(wsp.getState())) {
+					mapFail.get(ws.getStudent().getId()).incrementAndGet();
 				}
 			}
 		}

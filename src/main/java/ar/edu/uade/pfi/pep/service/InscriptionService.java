@@ -1,5 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,15 @@ public class InscriptionService {
 		Inscription inscription = this.repository.findById(inscriptionId).get();
 		this.workspaceService.deleteByStudentAndCourse(inscription.getStudent(), inscription.getCourse());
 		this.repository.deleteById(inscriptionId);
+	}
+	
+	public List<Student> getStudentsByCourseId(String courseId) {
+		List<Student> students = new ArrayList<Student>();
+		List<Inscription>inscriptions = this.repository.findByCourseId(courseId);
+		for(Inscription i : inscriptions) {
+			students.add(i.getStudent());
+		}
+		return students;
 	}
 
 	public List<Inscription> getInscriptions() {

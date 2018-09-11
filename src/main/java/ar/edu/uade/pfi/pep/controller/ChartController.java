@@ -41,4 +41,14 @@ public class ChartController {
 			return ResponseBuilder.error(e);
 		}
 	}
+	
+	@GetMapping("/total-progress-student-per-course/{courseId}")
+	public ResponseEntity<Response> getTotalProgressStudentsPerCourse(@PathVariable("courseId") String courseId) {
+		try {
+			return ResponseBuilder.success(this.chartService.getTotalProgressStudentsPerCourse(courseId));
+		} catch (Exception e) {
+			ChartController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
 }
