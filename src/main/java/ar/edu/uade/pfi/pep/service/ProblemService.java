@@ -45,7 +45,6 @@ public class ProblemService {
 	public void createProblem(Problem problem) {
 		Teacher teacher = this.teacherService.getTeacher();
 		problem.setTeacher(teacher);
-		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 
 		this.repository.save(problem);
 	}
@@ -53,7 +52,6 @@ public class ProblemService {
 	public void updateProblem(String problemId, Problem problem) {
 		Teacher teacher = this.teacherService.getTeacher();
 		problem.setTeacher(teacher);
-		problem.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.repository.save(problem);
 		
 		this.courseService.updateCoursesByProblem(problem);

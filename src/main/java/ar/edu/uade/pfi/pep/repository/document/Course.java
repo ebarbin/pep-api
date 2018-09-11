@@ -11,7 +11,6 @@ public class Course {
 
 	@Id
 	private String id;
-	private String instituteId;
 	private String name;
 	private String description;
 	private String code;
@@ -68,14 +67,6 @@ public class Course {
 		this.problems = problems;
 	}
 
-	public String getInstituteId() {
-		return instituteId;
-	}
-
-	public void setInstituteId(String instituteId) {
-		this.instituteId = instituteId;
-	}
-
 	public Teacher getTeacher() {
 		return teacher;
 	}
@@ -98,6 +89,6 @@ public class Course {
 	
     @Override
     public int hashCode() {
-        return Objects.hash(this.instituteId);
+        return Objects.hash(this.teacher);
     }
 }

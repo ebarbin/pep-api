@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -12,7 +11,6 @@ import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class CourseService {
@@ -31,27 +29,20 @@ public class CourseService {
 
 	@Autowired
 	private WorkspaceService workspaceService;
-	
+
 	public void createCourse(Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
-		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		this.repository.save(course);
 	}
 
 	public List<Course> getCoursesForTeacher() {
-		
-		Course course = new Course(new Teacher(new User(this.requestDataHolder.getUserId())));
-		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		Example<Course> example = Example.of(course);
-		return this.repository.findAll(example);
+
+		return this.repository.findByTeacherUserId(this.requestDataHolder.getUserId());
 	}
 
 	public List<Course> getCoursesForStudent() {
-		Course course = new Course();
-		course.setInstituteId(this.requestDataHolder.getInstituteId());
-		Example<Course> example = Example.of(course);
-		return this.repository.findAll(example);
+		return this.repository.findByTeacherInstituteId(this.requestDataHolder.getInstituteId());
 	}
 
 	public Optional<Course> findById(String courseId) {
@@ -68,9 +59,8 @@ public class CourseService {
 	public void updateCourse(String courseId, Course course) {
 		Teacher teacher = this.teacherService.getTeacher();
 		course.setTeacher(teacher);
-		course.setInstituteId(this.requestDataHolder.getInstituteId());
 		course = this.repository.save(course);
-		
+
 		this.inscriptionService.updateInscriptionsByCourse(course);
 		this.workspaceService.updateWorkspacesByCourse(course);
 	}
@@ -80,8 +70,8 @@ public class CourseService {
 	}
 
 	public void updateCoursesByProblem(Problem updatedProblem) {
-		List<Course>courses = this.repository.findByProblemsId(updatedProblem.getId());
-		for(Course c: courses) {
+		List<Course> courses = this.repository.findByProblemsId(updatedProblem.getId());
+		for (Course c : courses) {
 			for (Problem p : c.getProblems()) {
 				if (p.equals(updatedProblem)) {
 					p.setExplanation(updatedProblem.getExplanation());
@@ -89,12 +79,12 @@ public class CourseService {
 					p.setPosExecution(updatedProblem.getPosExecution());
 					p.setPreExecution(updatedProblem.getPreExecution());
 					p.setPrimitives(updatedProblem.getPrimitives());
-					
+
 					this.repository.save(c);
 				}
 			}
 		}
-		
+
 		this.workspaceService.updateWorkspacesByProblem(updatedProblem);
 		this.inscriptionService.updateInscriptionsByProblem(updatedProblem);
 	}

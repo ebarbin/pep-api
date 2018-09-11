@@ -12,7 +12,6 @@ public class Problem {
 	private String id;
 	private String name;
 	private String explanation;
-	private String instituteId;
 	private Teacher teacher;
 	private String preExecution;
 	private String posExecution;
@@ -43,14 +42,6 @@ public class Problem {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getInstituteId() {
-		return instituteId;
-	}
-
-	public void setInstituteId(String instituteId) {
-		this.instituteId = instituteId;
 	}
 
 	public Teacher getTeacher() {

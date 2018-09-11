@@ -81,6 +81,8 @@ public class UserService {
 			this.teacherService.update(teacher);
 			user.setRole("ROLE_TEACHER");
 			user.setInstituteId(teacher.getInstituteId());
+			
+			//TODO GET DEFAULT PRIMITIVES, PROBLEMS, COURSES AND CLONE WITH THIS TEACHER.
 		}
 
 		if (student != null) {
