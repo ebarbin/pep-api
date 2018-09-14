@@ -82,6 +82,18 @@ public class WorkspaceController {
 		}
 	}
 	
+	@PutMapping("/mark-problem-feedback/{workspaceId}")
+	public ResponseEntity<Response> markProblemAsFeedback(@PathVariable("workspaceId") String workspaceId,
+			@RequestBody WorkspaceProblem workspaceProblem) {
+		try {
+			this.service.markProblemAsFeedback(workspaceId, workspaceProblem);
+			return ResponseBuilder.success();
+		} catch (Exception e) {
+			WorkspaceController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
 	@PutMapping("/mark-problem-nook/{workspaceId}")
 	public ResponseEntity<Response> markProblemAsNoOk(@PathVariable("workspaceId") String workspaceId,
 			@RequestBody WorkspaceProblem workspaceProblem) {

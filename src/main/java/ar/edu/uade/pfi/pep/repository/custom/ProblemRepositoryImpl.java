@@ -22,7 +22,6 @@ public class ProblemRepositoryImpl implements ProblemRepositoryCustom {
 	@Override
 	public List<Problem> findByNameLike(String text) {
 		Criteria c = Criteria.where("name").regex(text, "i");
-		c.and("instituteId").is(this.requestDataHolder.getInstituteId());
 		c.and("teacher.user.id").is(new ObjectId(this.requestDataHolder.getUserId()));
 
 		return this.mongoTemplate.find(new Query(c), Problem.class);

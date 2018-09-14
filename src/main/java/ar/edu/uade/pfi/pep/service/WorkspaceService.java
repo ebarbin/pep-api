@@ -174,7 +174,19 @@ public class WorkspaceService {
 		this.repository.save(w);
 	}
 
+	public void markProblemAsFeedback(String workspaceId, WorkspaceProblem workspaceProblem) {
+		Workspace w = this.repository.findById(workspaceId).get();
+		for (WorkspaceProblem wp : w.getProblems()) {
+			if (wp.getProblem().equals(workspaceProblem.getProblem())) {
+				wp.setState("FEEDBACK");
+				break;
+			}
+		}
+		this.repository.save(w);
+	}
+	
 	public List<Workspace> getWorkspacesByCourse(String courseId) {
 		return this.repository.findByCourseId(courseId);
 	}
+
 }
