@@ -19,7 +19,7 @@ public class PrimitiveService {
 
 	@Autowired
 	private PrimitiveRepository repository;
-	
+
 	@Autowired
 	private PrimitiveRepositoryImpl customRepository;
 
@@ -28,7 +28,7 @@ public class PrimitiveService {
 
 	@Autowired
 	private ProblemService problemService;
-	
+
 	@Autowired
 	private RequestDataHolder requestDataHolder;
 
@@ -42,33 +42,63 @@ public class PrimitiveService {
 		return this.repository.findById(primitiveId);
 	}
 
-	public void createPrimitive(Primitive primitive) {
-		Teacher teacher = this.teacherService.getTeacher();
-		primitive.setTeacher(teacher);
-		this.repository.save(primitive);
+	public void createPrimitive(Primitive primitive) throws Exception {
+		if (!this.existPrimitiveWithSameName(primitive)) {
+			Teacher teacher = this.teacherService.getTeacher();
+			primitive.setTeacher(teacher);
+			this.repository.save(primitive);
+		} else {
+			throw new Exception("Ya existe una primitiva con ese nombre.");
+		}
 	}
-	
-	public void deleteById(String primitiveId) throws Exception {
+
+	private boolean existPrimitiveWithSameName(Primitive p) {
+
+		Primitive examplePrimitive = new Primitive(new Teacher(new User(this.requestDataHolder.getUserId())));
+		examplePrimitive.setName(p.getName());
+		Example<Primitive> example = Example.of(examplePrimitive);
+		Optional<Primitive>optional = this.repository.findOne(example);
 		
+		//Creacion
+		if (p.getId() == null) {
+			return optional.isPresent();
+		} else {
+			if (optional.isPresent()) {
+				Primitive primitive = optional.get();
+				if (!primitive.getId().equals(p.getId())) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public void deleteById(String primitiveId) throws Exception {
+
 		if (this.problemService.hasProblemsWithPrimitiveId(primitiveId))
 			throw new Exception("No se puede eliminar la primitiva pues hay ejercicios que la usan.");
-		
+
 		this.repository.deleteById(primitiveId);
 	}
 
-	public void updatePrimitive(String primitiveId, Primitive primitive) {
-		
-		this.repository.findById(primitiveId);
-		Teacher teacher = this.teacherService.getTeacher();
-		primitive.setTeacher(teacher);
-		this.repository.save(primitive);
-		
-		this.problemService.updateProblemsByPrimitive(primitive);
+	public void updatePrimitive(String primitiveId, Primitive primitive) throws Exception {
 
+		if (!this.existPrimitiveWithSameName(primitive)) {
+			this.repository.findById(primitiveId);
+			Teacher teacher = this.teacherService.getTeacher();
+			primitive.setTeacher(teacher);
+			this.repository.save(primitive);
+
+			this.problemService.updateProblemsByPrimitive(primitive);
+		} else {
+			throw new Exception("Ya existe una primitiva con ese nombre.");
+		}
 	}
 
 	public List<Primitive> findByNameLike(String nameSearch) {
 		return this.customRepository.findByNameLike(nameSearch);
 	}
-
 }
