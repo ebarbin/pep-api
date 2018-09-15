@@ -17,4 +17,6 @@ public interface WorkspaceRepository extends MongoRepository<Workspace, String>,
 
 	List<Workspace> findByCourseId(String id);
 
+	List<Workspace> findByCourseTeacherUserId(String userId);
+
 }

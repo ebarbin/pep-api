@@ -1,14 +1,18 @@
 package ar.edu.uade.pfi.pep.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
+import ar.edu.uade.pfi.pep.common.ProblemState;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.WorkspaceRepository;
+import ar.edu.uade.pfi.pep.repository.document.Correction;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
@@ -25,6 +29,9 @@ public class WorkspaceService {
 
 	@Autowired
 	private RequestDataHolder requestDataHolder;
+
+	@Autowired
+	private UserService userService;
 
 	public Workspace getActiveWorkspace() {
 		Example<Workspace> example = Example.of(new Workspace(new User(this.requestDataHolder.getUserId()), true));
@@ -184,9 +191,36 @@ public class WorkspaceService {
 		}
 		this.repository.save(w);
 	}
-	
+
 	public List<Workspace> getWorkspacesByCourse(String courseId) {
 		return this.repository.findByCourseId(courseId);
 	}
 
+	public List<Correction> getCorrections() {
+
+		Map<String, User>mapOfUsers = new HashMap<String, User>();
+		List<Correction> results = new ArrayList<Correction>();
+
+		List<Workspace> workspaces = this.repository.findByCourseTeacherUserId(this.requestDataHolder.getUserId());
+		Correction result;
+		for (Workspace ws : workspaces) {
+			for (WorkspaceProblem wsp : ws.getProblems()) {
+				if (ProblemState.FEEDBACK.name().equals(wsp.getState())) {
+					result = new Correction();
+					result.setCourse(ws.getCourse());
+					result.setStudent(ws.getStudent());
+					result.setTeacher(ws.getCourse().getTeacher());
+					result.setWasReadedByTeacher(false);
+					result.setWorkspaceProblem(wsp);
+					if (!mapOfUsers.containsKey(ws.getStudent().getUser().getId())) {
+						mapOfUsers.put(ws.getStudent().getUser().getId(), this.userService.getUser(ws.getStudent().getUser().getId()));
+					}
+					result.getStudent().setUser(mapOfUsers.get(ws.getStudent().getUser().getId()));
+					results.add(result);
+				}
+			}
+		}
+
+		return results;
+	}
 }

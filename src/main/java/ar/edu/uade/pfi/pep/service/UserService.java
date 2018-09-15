@@ -1,6 +1,7 @@
 package ar.edu.uade.pfi.pep.service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
@@ -221,5 +222,10 @@ public class UserService {
 		ObjectId objectId = this.gridOperations.store(file.getInputStream(), file.getOriginalFilename());
 		existingUser.setImageId(objectId.toString());
 		return this.repository.save(existingUser);
+	}
+	
+	public User getUser(String userId) {
+		Optional<User> existingUser = this.repository.findById(userId);
+		return existingUser.get();
 	}
 }

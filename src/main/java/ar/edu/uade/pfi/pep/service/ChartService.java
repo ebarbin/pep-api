@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+import ar.edu.uade.pfi.pep.common.ProblemState;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
@@ -102,9 +103,9 @@ public class ChartService {
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (Strings.isEmpty(wsp.getState())) {
 					mapNon.get(wsp.getProblem().getId()).incrementAndGet();
-				} else if ("OK".equals(wsp.getState())) {
+				} else if (ProblemState.OK.name().equals(wsp.getState())) {
 					mapSuccess.get(wsp.getProblem().getId()).incrementAndGet();
-				} else if ("NOOK".equals(wsp.getState())) {
+				} else if (ProblemState.NOOK.name().equals(wsp.getState())) {
 					mapFail.get(wsp.getProblem().getId()).incrementAndGet();
 				}
 			}
@@ -161,9 +162,9 @@ public class ChartService {
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (Strings.isEmpty(wsp.getState())) {
 					mapNon.get(ws.getStudent().getId()).incrementAndGet();
-				} else if ("OK".equals(wsp.getState())) {
+				} else if (ProblemState.OK.name().equals(wsp.getState())) {
 					mapSuccess.get(ws.getStudent().getId()).incrementAndGet();
-				} else if ("NOOK".equals(wsp.getState())) {
+				} else if (ProblemState.NOOK.name().equals(wsp.getState())) {
 					mapFail.get(ws.getStudent().getId()).incrementAndGet();
 				}
 			}
