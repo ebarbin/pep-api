@@ -59,7 +59,6 @@ public class PrimitiveService {
 		Example<Primitive> example = Example.of(examplePrimitive);
 		Optional<Primitive>optional = this.repository.findOne(example);
 		
-		//Creacion
 		if (p.getId() == null) {
 			return optional.isPresent();
 		} else {
@@ -74,6 +73,7 @@ public class PrimitiveService {
 				return false;
 			}
 		}
+		
 	}
 
 	public void deleteById(String primitiveId) throws Exception {

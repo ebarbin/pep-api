@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -11,6 +12,7 @@ import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
+import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class CourseService {
@@ -30,10 +32,15 @@ public class CourseService {
 	@Autowired
 	private WorkspaceService workspaceService;
 
-	public void createCourse(Course course) {
-		Teacher teacher = this.teacherService.getTeacher();
-		course.setTeacher(teacher);
-		this.repository.save(course);
+	public void createCourse(Course course) throws Exception {
+
+		if (!this.existCourseWithSameName(course)) {
+			Teacher teacher = this.teacherService.getTeacher();
+			course.setTeacher(teacher);
+			this.repository.save(course);
+		} else {
+			throw new Exception("Ya existe un curso con ese nombre.");
+		}
 	}
 
 	public List<Course> getCoursesForTeacher() {
@@ -56,13 +63,18 @@ public class CourseService {
 		this.repository.deleteById(courseId);
 	}
 
-	public void updateCourse(String courseId, Course course) {
-		Teacher teacher = this.teacherService.getTeacher();
-		course.setTeacher(teacher);
-		course = this.repository.save(course);
+	public void updateCourse(String courseId, Course course) throws Exception {
 
-		this.inscriptionService.updateInscriptionsByCourse(course);
-		this.workspaceService.updateWorkspacesByCourse(course);
+		if (!this.existCourseWithSameName(course)) {
+			Teacher teacher = this.teacherService.getTeacher();
+			course.setTeacher(teacher);
+			course = this.repository.save(course);
+
+			this.inscriptionService.updateInscriptionsByCourse(course);
+			this.workspaceService.updateWorkspacesByCourse(course);
+		} else {
+			throw new Exception("Ya existe un curso con ese nombre.");
+		}
 	}
 
 	public boolean hasCoursesByProblemId(String problemId) {
@@ -87,5 +99,28 @@ public class CourseService {
 
 		this.workspaceService.updateWorkspacesByProblem(updatedProblem);
 		this.inscriptionService.updateInscriptionsByProblem(updatedProblem);
+	}
+
+	private boolean existCourseWithSameName(Course c) {
+
+		Course exampleCourse = new Course(new Teacher(new User(this.requestDataHolder.getUserId())));
+		exampleCourse.setName(c.getName());
+		Example<Course> example = Example.of(exampleCourse);
+		Optional<Course> optional = this.repository.findOne(example);
+
+		if (c.getId() == null) {
+			return optional.isPresent();
+		} else {
+			if (optional.isPresent()) {
+				Course course = optional.get();
+				if (!course.getId().equals(c.getId())) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
 	}
 }

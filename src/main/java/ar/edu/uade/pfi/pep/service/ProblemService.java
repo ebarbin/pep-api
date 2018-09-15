@@ -1,6 +1,7 @@
 package ar.edu.uade.pfi.pep.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -42,19 +43,51 @@ public class ProblemService {
 		return this.customRepository.findByNameLike(nameSearch);
 	}
 
-	public void createProblem(Problem problem) {
-		Teacher teacher = this.teacherService.getTeacher();
-		problem.setTeacher(teacher);
+	public void createProblem(Problem problem) throws Exception {
+		
+		if (!this.existProblemWithSameName(problem)) {
+			Teacher teacher = this.teacherService.getTeacher();
+			problem.setTeacher(teacher);
 
-		this.repository.save(problem);
+			this.repository.save(problem);
+		} else {
+			throw new Exception("Ya existe un problema con ese nombre.");
+		}
 	}
 
-	public void updateProblem(String problemId, Problem problem) {
-		Teacher teacher = this.teacherService.getTeacher();
-		problem.setTeacher(teacher);
-		this.repository.save(problem);
+	private boolean existProblemWithSameName(Problem p) {
+		Problem exampleProblem = new Problem(new Teacher(new User(this.requestDataHolder.getUserId())));
+		exampleProblem.setName(p.getName());
+		Example<Problem> example = Example.of(exampleProblem);
+		Optional<Problem> optional = this.repository.findOne(example);
+
+		if (p.getId() == null) {
+			return optional.isPresent();
+		} else {
+			if (optional.isPresent()) {
+				Problem problem = optional.get();
+				if (!problem.getId().equals(p.getId())) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public void updateProblem(String problemId, Problem problem) throws Exception {
 		
-		this.courseService.updateCoursesByProblem(problem);
+		if (!this.existProblemWithSameName(problem)) {
+			Teacher teacher = this.teacherService.getTeacher();
+			problem.setTeacher(teacher);
+			this.repository.save(problem);
+			
+			this.courseService.updateCoursesByProblem(problem);
+		} else {
+			throw new Exception("Ya existe un problema con ese nombre.");
+		}
 	}
 
 	public void deleteById(String problemId) throws Exception {
