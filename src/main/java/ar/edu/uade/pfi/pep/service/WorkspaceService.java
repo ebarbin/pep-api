@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -198,7 +199,7 @@ public class WorkspaceService {
 
 	public List<Correction> getCorrections() {
 
-		Map<String, User>mapOfUsers = new HashMap<String, User>();
+		Map<String, User> mapOfUsers = new HashMap<String, User>();
 		List<Correction> results = new ArrayList<Correction>();
 
 		List<Workspace> workspaces = this.repository.findByCourseTeacherUserId(this.requestDataHolder.getUserId());
@@ -207,13 +208,15 @@ public class WorkspaceService {
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (ProblemState.FEEDBACK.name().equals(wsp.getState())) {
 					result = new Correction();
+					result.setId(wsp.getProblem().getId() + "-" + ws.getStudent().getId());
+					result.setWorkspaceId(ws.getId());
 					result.setCourse(ws.getCourse());
 					result.setStudent(ws.getStudent());
 					result.setTeacher(ws.getCourse().getTeacher());
-					result.setWasReadedByTeacher(false);
 					result.setWorkspaceProblem(wsp);
 					if (!mapOfUsers.containsKey(ws.getStudent().getUser().getId())) {
-						mapOfUsers.put(ws.getStudent().getUser().getId(), this.userService.getUser(ws.getStudent().getUser().getId()));
+						mapOfUsers.put(ws.getStudent().getUser().getId(),
+								this.userService.getUser(ws.getStudent().getUser().getId()));
 					}
 					result.getStudent().setUser(mapOfUsers.get(ws.getStudent().getUser().getId()));
 					results.add(result);
@@ -222,5 +225,20 @@ public class WorkspaceService {
 		}
 
 		return results;
+	}
+
+	public void saveCorrection(Correction correction) {
+		Optional<Workspace> optional = this.repository.findById(correction.getWorkspaceId());
+		if (optional.isPresent()) {
+			Workspace ws = optional.get();
+			for (WorkspaceProblem wsp : ws.getProblems()) {
+				if (wsp.getProblem().getId().equals(correction.getWorkspaceProblem().getProblem().getId())) {
+					wsp.setFeedback(correction.getWorkspaceProblem().getFeedback());
+					wsp.setSolution(correction.getWorkspaceProblem().getSolution());
+					wsp.setState(correction.getWorkspaceProblem().getState());
+				}
+			}
+			this.repository.save(ws);
+		}
 	}
 }

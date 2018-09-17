@@ -3,12 +3,10 @@ package ar.edu.uade.pfi.pep.repository.document;
 public class WorkspaceProblem {
 
 	private Problem problem;
-	
 	private String solution;
-	
 	private boolean active;
-	
 	private String state;
+	private String feedback;
 	
 	public WorkspaceProblem() {}
 
@@ -46,5 +44,13 @@ public class WorkspaceProblem {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getFeedback() {
+		return feedback;
+	}
+
+	public void setFeedback(String feedback) {
+		this.feedback = feedback;
 	}
 }

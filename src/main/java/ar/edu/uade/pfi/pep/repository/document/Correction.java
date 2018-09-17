@@ -2,11 +2,28 @@ package ar.edu.uade.pfi.pep.repository.document;
 
 public class Correction {
 
+	private String id;
+	private String workspaceId;
 	private Student student;
 	private Teacher teacher;
 	private Course course;
 	private WorkspaceProblem workspaceProblem;
-	private boolean wasReadedByTeacher;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getWorkspaceId() {
+		return workspaceId;
+	}
+
+	public void setWorkspaceId(String workspaceId) {
+		this.workspaceId = workspaceId;
+	}
 
 	public Student getStudent() {
 		return student;
@@ -38,13 +55,5 @@ public class Correction {
 
 	public void setWorkspaceProblem(WorkspaceProblem workspaceProblem) {
 		this.workspaceProblem = workspaceProblem;
-	}
-
-	public boolean isWasReadedByTeacher() {
-		return wasReadedByTeacher;
-	}
-
-	public void setWasReadedByTeacher(boolean wasReadedByTeacher) {
-		this.wasReadedByTeacher = wasReadedByTeacher;
 	}
 }
