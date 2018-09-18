@@ -3,11 +3,10 @@ package ar.edu.uade.pfi.pep.repository;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import ar.edu.uade.pfi.pep.repository.document.Workspace;
 
-public interface WorkspaceRepository extends MongoRepository<Workspace, String>, QueryByExampleExecutor<Workspace> {
+public interface WorkspaceRepository extends MongoRepository<Workspace, String> {
 
 	void deleteByStudentIdAndCourseId(String studentId, String courseId);
 
@@ -18,5 +17,7 @@ public interface WorkspaceRepository extends MongoRepository<Workspace, String>,
 	List<Workspace> findByCourseId(String id);
 
 	List<Workspace> findByCourseTeacherUserId(String userId);
+
+	Workspace findByStudentUserIdAndActive(String userId, boolean active);
 
 }

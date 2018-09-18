@@ -5,8 +5,6 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import ar.edu.uade.pfi.pep.repository.document.user.User;
-
 @Document(collection = "inscription")
 public class Inscription {
 
@@ -23,10 +21,6 @@ public class Inscription {
 	
 	public Inscription(Course course) {
 		this.course = course;
-	}
-	
-	public Inscription(User user) {
-		this(new Student(user));
 	}
 	
 	public Inscription(Student student) {

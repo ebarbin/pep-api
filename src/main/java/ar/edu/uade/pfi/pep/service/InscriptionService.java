@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -15,7 +14,6 @@ import ar.edu.uade.pfi.pep.repository.document.Inscription;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class InscriptionService {
@@ -59,14 +57,13 @@ public class InscriptionService {
 	}
 
 	public List<Inscription> getInscriptions() {
-
-		Example<Inscription> example = Example.of(new Inscription(new User(this.requestDataHolder.getUserId())));
-		return this.repository.findAll(example);
+		
+		return this.repository.findByStudentUserId(this.requestDataHolder.getUserId());
 	}
 
 	public boolean hasInscriptionsWithCourseId(String courseId) {
-		Example<Inscription> example = Example.of(new Inscription(new Course(courseId)));
-		return this.repository.count(example) > 0;
+		
+		return this.repository.countByCourseId(courseId) > 0;
 	}
 
 	public void updateInscriptionsByProblem(Problem updatedProblem) {

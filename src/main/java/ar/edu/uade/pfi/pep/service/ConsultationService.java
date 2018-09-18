@@ -30,10 +30,12 @@ public class ConsultationService {
 	}
 
 	public List<Consultation> getStudentConsultations() {
+		
 		return this.customRepository.getStudentConsultations();
 	}
 
 	public List<Consultation> getTeacherConsultations() {
+		
 		return this.customRepository.getTeacherConsultations();
 	}
 
@@ -43,13 +45,14 @@ public class ConsultationService {
 	}
 
 	public Long markAsReadStudentResponse(Consultation consultation) {
+		
 		consultation.setWasReadedByStudent(Boolean.TRUE);
 		this.repository.save(consultation);
 		return this.getStudentUnreadedResponses();
 	}
 
 	public Long getTeacherUnreadedConsultations() {
-		
+
 		return this.customRepository.getTeacherUnreadedConsultations();
 	}
 
@@ -60,6 +63,7 @@ public class ConsultationService {
 	}
 
 	public void sendResponse(Consultation consultation) {
+		
 		consultation.setWasReadedByStudent(Boolean.FALSE);
 		if (consultation.getStudent() == null) {
 			List<Inscription> inscriptions = this.inscriptionService.getInscriptionsByCourse(consultation.getCourse());

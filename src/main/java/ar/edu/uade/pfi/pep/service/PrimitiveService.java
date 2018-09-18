@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -12,7 +11,6 @@ import ar.edu.uade.pfi.pep.repository.PrimitiveRepository;
 import ar.edu.uade.pfi.pep.repository.custom.PrimitiveRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Primitive;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class PrimitiveService {
@@ -33,9 +31,8 @@ public class PrimitiveService {
 	private RequestDataHolder requestDataHolder;
 
 	public List<Primitive> getPrimitives() {
-		Primitive primitive = new Primitive(new Teacher(new User(this.requestDataHolder.getUserId())));
-		Example<Primitive> example = Example.of(primitive);
-		return this.repository.findAll(example);
+		
+		return this.repository.findByTeacherUserId(this.requestDataHolder.getUserId());
 	}
 
 	public Optional<Primitive> findById(String primitiveId) {
@@ -54,16 +51,12 @@ public class PrimitiveService {
 
 	private boolean existPrimitiveWithSameName(Primitive p) {
 
-		Primitive examplePrimitive = new Primitive(new Teacher(new User(this.requestDataHolder.getUserId())));
-		examplePrimitive.setName(p.getName());
-		Example<Primitive> example = Example.of(examplePrimitive);
-		Optional<Primitive>optional = this.repository.findOne(example);
+		Primitive primitive = this.repository.findByTeacherUserIdAndName(this.requestDataHolder.getUserId(), p.getName());
 		
 		if (p.getId() == null) {
-			return optional.isPresent();
+			return primitive != null;
 		} else {
-			if (optional.isPresent()) {
-				Primitive primitive = optional.get();
+			if (primitive != null) {
 				if (!primitive.getId().equals(p.getId())) {
 					return true;
 				} else {

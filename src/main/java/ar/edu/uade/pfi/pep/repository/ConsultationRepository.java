@@ -3,13 +3,11 @@ package ar.edu.uade.pfi.pep.repository;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 import ar.edu.uade.pfi.pep.repository.custom.ConsultationRespositoryCustom;
 import ar.edu.uade.pfi.pep.repository.document.Consultation;
 
-public interface ConsultationRepository extends MongoRepository<Consultation, String>, ConsultationRespositoryCustom,
-		QueryByExampleExecutor<Consultation> {
+public interface ConsultationRepository extends MongoRepository<Consultation, String>, ConsultationRespositoryCustom {
 
 	List<Consultation> findByStudentUserIdOrderByCreationDateDesc(String userId);
 }

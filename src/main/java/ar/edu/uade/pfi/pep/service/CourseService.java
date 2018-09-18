@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -12,7 +11,6 @@ import ar.edu.uade.pfi.pep.repository.CourseRepository;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
-import ar.edu.uade.pfi.pep.repository.document.user.User;
 
 @Component
 public class CourseService {
@@ -103,16 +101,12 @@ public class CourseService {
 
 	private boolean existCourseWithSameName(Course c) {
 
-		Course exampleCourse = new Course(new Teacher(new User(this.requestDataHolder.getUserId())));
-		exampleCourse.setName(c.getName());
-		Example<Course> example = Example.of(exampleCourse);
-		Optional<Course> optional = this.repository.findOne(example);
+		Course course = this.repository.findByTeacherUserIdAndName(this.requestDataHolder.getUserId(), c.getName());
 
 		if (c.getId() == null) {
-			return optional.isPresent();
+			return course != null;
 		} else {
-			if (optional.isPresent()) {
-				Course course = optional.get();
+			if (course != null) {
 				if (!course.getId().equals(c.getId())) {
 					return true;
 				} else {

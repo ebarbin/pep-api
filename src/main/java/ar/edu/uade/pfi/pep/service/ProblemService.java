@@ -1,7 +1,6 @@
 package ar.edu.uade.pfi.pep.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -56,16 +55,13 @@ public class ProblemService {
 	}
 
 	private boolean existProblemWithSameName(Problem p) {
-		Problem exampleProblem = new Problem(new Teacher(new User(this.requestDataHolder.getUserId())));
-		exampleProblem.setName(p.getName());
-		Example<Problem> example = Example.of(exampleProblem);
-		Optional<Problem> optional = this.repository.findOne(example);
+		
+		Problem problem = this.repository.findByTeacherUserIdAndName(this.requestDataHolder.getUserId(), p.getName());
 
 		if (p.getId() == null) {
-			return optional.isPresent();
+			return problem != null;
 		} else {
-			if (optional.isPresent()) {
-				Problem problem = optional.get();
+			if (problem != null) {
 				if (!problem.getId().equals(p.getId())) {
 					return true;
 				} else {

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.ProblemState;
@@ -35,8 +34,8 @@ public class WorkspaceService {
 	private UserService userService;
 
 	public Workspace getActiveWorkspace() {
-		Example<Workspace> example = Example.of(new Workspace(new User(this.requestDataHolder.getUserId()), true));
-		return this.repository.findOne(example).isPresent() ? this.repository.findOne(example).get() : null;
+		
+		return this.repository.findByStudentUserIdAndActive(this.requestDataHolder.getUserId(), true);
 	}
 
 	public Workspace removeBy(Workspace workspace) {
@@ -44,10 +43,12 @@ public class WorkspaceService {
 	}
 
 	public void deleteByStudentAndCourse(Student student, Course course) {
+		
 		this.repository.deleteByStudentIdAndCourseId(student.getId(), course.getId());
 	}
 
 	public Workspace updateActive(Workspace workspace) {
+		
 		List<Workspace> studentWorkspaces = this.repository.findByStudentUserId(this.requestDataHolder.getUserId());
 
 		boolean mustActive = workspace.getCourse().getId() != null;
