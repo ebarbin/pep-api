@@ -38,7 +38,17 @@ public class CorrectionController {
 	public ResponseEntity<Response> sendCorrection(@RequestBody Correction correction) {
 		try {
 			this.workspaceService.saveCorrection(correction);
-			return ResponseBuilder.success();
+			return this.getCorrections();
+		} catch (Exception e) {
+			CorrectionController.LOGGER.error(e.getMessage(), e);
+			return ResponseBuilder.error(e);
+		}
+	}
+	
+	@GetMapping("/quantity")
+	public ResponseEntity<Response> getCorrectionsQuantity() {
+		try {
+			return ResponseBuilder.success(Long.valueOf(this.workspaceService.getCorrections().size()));
 		} catch (Exception e) {
 			CorrectionController.LOGGER.error(e.getMessage(), e);
 			return ResponseBuilder.error(e);
