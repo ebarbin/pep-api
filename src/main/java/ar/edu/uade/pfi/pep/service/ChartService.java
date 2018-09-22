@@ -80,11 +80,13 @@ public class ChartService {
 		Map<String, AtomicInteger> mapSuccess = new LinkedHashMap<String, AtomicInteger>();
 		Map<String, AtomicInteger> mapNon = new LinkedHashMap<String, AtomicInteger>();
 		Map<String, AtomicInteger> mapFail = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapFeedback = new LinkedHashMap<String, AtomicInteger>();
 
 		for (WorkspaceProblem wp : workspaces.get(0).getProblems()) {
 			mapSuccess.put(wp.getProblem().getId(), new AtomicInteger(0));
 			mapNon.put(wp.getProblem().getId(), new AtomicInteger(0));
 			mapFail.put(wp.getProblem().getId(), new AtomicInteger(0));
+			mapFeedback.put(wp.getProblem().getId(), new AtomicInteger(0));
 		}
 
 		DBObject successResolucion = new BasicDBObject("label", "Correcto");
@@ -99,6 +101,10 @@ public class ChartService {
 		failResolucion.put("data", new ArrayList<Integer>());
 		results.add(failResolucion);
 		
+		DBObject feedBackResolucion = new BasicDBObject("label", "A corrección");
+		feedBackResolucion.put("data", new ArrayList<Integer>());
+		results.add(feedBackResolucion);
+		
 		for (Workspace ws : workspaces) {
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (Strings.isEmpty(wsp.getState())) {
@@ -107,6 +113,8 @@ public class ChartService {
 					mapSuccess.get(wsp.getProblem().getId()).incrementAndGet();
 				} else if (ProblemState.NOOK.name().equals(wsp.getState())) {
 					mapFail.get(wsp.getProblem().getId()).incrementAndGet();
+				} else if (ProblemState.FEEDBACK.name().equals(wsp.getState())) {
+					mapFeedback.get(wsp.getProblem().getId()).incrementAndGet();
 				}
 			}
 		}
@@ -121,6 +129,10 @@ public class ChartService {
 		
 		for(String id : mapFail.keySet()) {
 			((List) failResolucion.get("data")).add(Integer.valueOf(mapFail.get(id).get()));
+		}
+		
+		for(String id : mapFeedback.keySet()) {
+			((List) feedBackResolucion.get("data")).add(Integer.valueOf(mapFeedback.get(id).get()));
 		}
 		
 		return results;
@@ -139,11 +151,13 @@ public class ChartService {
 		Map<String, AtomicInteger> mapSuccess = new LinkedHashMap<String, AtomicInteger>();
 		Map<String, AtomicInteger> mapNon = new LinkedHashMap<String, AtomicInteger>();
 		Map<String, AtomicInteger> mapFail = new LinkedHashMap<String, AtomicInteger>();
+		Map<String, AtomicInteger> mapFeedback = new LinkedHashMap<String, AtomicInteger>();
 
 		for (Student s : students) {
 			mapSuccess.put(s.getId(), new AtomicInteger(0));
 			mapNon.put(s.getId(), new AtomicInteger(0));
 			mapFail.put(s.getId(), new AtomicInteger(0));
+			mapFeedback.put(s.getId(), new AtomicInteger(0));
 		}
 
 		DBObject successResolucion = new BasicDBObject("label", "Correcto");
@@ -158,6 +172,10 @@ public class ChartService {
 		failResolucion.put("data", new ArrayList<Integer>());
 		results.add(failResolucion);
 		
+		DBObject feedBackResolucion = new BasicDBObject("label", "A corrección");
+		feedBackResolucion.put("data", new ArrayList<Integer>());
+		results.add(feedBackResolucion);
+		
 		for (Workspace ws : workspaces) {
 			for (WorkspaceProblem wsp : ws.getProblems()) {
 				if (Strings.isEmpty(wsp.getState())) {
@@ -166,6 +184,8 @@ public class ChartService {
 					mapSuccess.get(ws.getStudent().getId()).incrementAndGet();
 				} else if (ProblemState.NOOK.name().equals(wsp.getState())) {
 					mapFail.get(ws.getStudent().getId()).incrementAndGet();
+				} else if (ProblemState.FEEDBACK.name().equals(wsp.getState())) {
+					mapFeedback.get(ws.getStudent().getId()).incrementAndGet();
 				}
 			}
 		}
@@ -180,6 +200,10 @@ public class ChartService {
 		
 		for(String id : mapFail.keySet()) {
 			((List) failResolucion.get("data")).add(Integer.valueOf(mapFail.get(id).get()));
+		}
+		
+		for(String id : mapFeedback.keySet()) {
+			((List) feedBackResolucion.get("data")).add(Integer.valueOf(mapFeedback.get(id).get()));
 		}
 		
 		return results;
