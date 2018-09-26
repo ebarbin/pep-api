@@ -13,6 +13,7 @@ public class Problem {
 	private String name;
 	private String explanation;
 	private Teacher teacher;
+	private String teacherSolucion;
 	private String preExecution;
 	private String posExecution;
 	private List<Primitive> primitives;
@@ -82,6 +83,14 @@ public class Problem {
 
 	public void setPosExecution(String posExecution) {
 		this.posExecution = posExecution;
+	}
+	
+	public String getTeacherSolucion() {
+		return teacherSolucion;
+	}
+
+	public void setTeacherSolucion(String teacherSolucion) {
+		this.teacherSolucion = teacherSolucion;
 	}
 
 	@Override
