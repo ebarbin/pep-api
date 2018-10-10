@@ -57,7 +57,7 @@ public class WorkspaceController {
 			return ResponseBuilder.error(e);
 		}
 	}
-	
+
 	@PutMapping("/update-solution/{workspaceId}")
 	public ResponseEntity<Response> updateSolution(@PathVariable("workspaceId") String workspaceId,
 			@RequestBody WorkspaceProblem workspaceProblem) {
@@ -69,7 +69,7 @@ public class WorkspaceController {
 			return ResponseBuilder.error(e);
 		}
 	}
-	
+
 	@PutMapping("/mark-problem-ok/{workspaceId}")
 	public ResponseEntity<Response> markProblemAsOk(@PathVariable("workspaceId") String workspaceId,
 			@RequestBody WorkspaceProblem workspaceProblem) {
@@ -81,7 +81,7 @@ public class WorkspaceController {
 			return ResponseBuilder.error(e);
 		}
 	}
-	
+
 	@PutMapping("/mark-problem-feedback/{workspaceId}")
 	public ResponseEntity<Response> markProblemAsFeedback(@PathVariable("workspaceId") String workspaceId,
 			@RequestBody WorkspaceProblem workspaceProblem) {
@@ -93,7 +93,7 @@ public class WorkspaceController {
 			return ResponseBuilder.error(e);
 		}
 	}
-	
+
 	@PutMapping("/mark-problem-nook/{workspaceId}")
 	public ResponseEntity<Response> markProblemAsNoOk(@PathVariable("workspaceId") String workspaceId,
 			@RequestBody WorkspaceProblem workspaceProblem) {
@@ -105,5 +105,4 @@ public class WorkspaceController {
 			return ResponseBuilder.error(e);
 		}
 	}
-	
 }
