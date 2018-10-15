@@ -97,7 +97,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 				"/change-password", "/pep-api/consultation/unreaded/teacher", "/pep-api/chart/students-per-course",
 				"/pep-api/consultation/mark-as-read/teacher", "/pep-api/chart/total-progress-student-per-course",
 				"/pep-api/student/byCourseId", "/pep-api/chart/progress-student-per-course", "/pep-api/primitive",
-				"/pep-api/chart/progress-student-per-course", "/pep-api/inscription", "/pep-api/problem"));
+				"/pep-api/chart/progress-student-per-course", "/pep-api/inscription", "/pep-api/problem", "/store-profile-image"));
 		map.put("ROLE_STUDENT",
 				Arrays.asList("/pep-api/workspace/active", "/pep-api/workspace/updateActive",
 						"/pep-api/workspace/updateActive", "/pep-api/workspace/active-other-problem",
@@ -105,7 +105,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 						"/pep-api/workspace/mark-problem-feedback", "/pep-api/workspace/mark-problem-nook",
 						"/pep-api/consultation/unreaded/student", "/pep-api/consultation/student",
 						"/pep-api/consultation/", "/pep-api/consultation/mark-as-read/student", "/pep-api/inscription",
-						"/pep-api/course/forStudent", "/change-password"));
+						"/pep-api/course/forStudent", "/change-password", "/store-profile-image"));
 		return map;
 	}
 }
