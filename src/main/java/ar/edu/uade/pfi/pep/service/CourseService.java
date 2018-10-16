@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.CourseRepository;
+import ar.edu.uade.pfi.pep.repository.custom.CourseRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Course;
 import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
@@ -18,6 +19,9 @@ public class CourseService {
 	@Autowired
 	private CourseRepository repository;
 
+	@Autowired
+	private CourseRepositoryImpl customRepository;
+	
 	@Autowired
 	private RequestDataHolder requestDataHolder;
 
@@ -30,6 +34,16 @@ public class CourseService {
 	@Autowired
 	private WorkspaceService workspaceService;
 
+	public List<Course> findForTeacherByNameLike(String nameSearch) {
+		return this.customRepository.findForTeacherByNameLike(nameSearch);
+	}
+	
+
+	public List<Course> findForStudentByNameLike(String nameSearch) {
+		
+		return this.customRepository.findForStudentByNameLike(nameSearch);
+	}
+	
 	public void createCourse(Course course) throws Exception {
 
 		if (!this.existCourseWithSameName(course)) {
@@ -117,4 +131,5 @@ public class CourseService {
 			}
 		}
 	}
+
 }
