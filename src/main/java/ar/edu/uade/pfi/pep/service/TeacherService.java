@@ -1,13 +1,13 @@
 package ar.edu.uade.pfi.pep.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.TeacherRepository;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
-@Component
+@Service
 public class TeacherService {
 
 	@Autowired

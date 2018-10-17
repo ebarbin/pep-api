@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -24,7 +24,7 @@ import ar.edu.uade.pfi.pep.repository.document.Workspace;
 import ar.edu.uade.pfi.pep.repository.document.WorkspaceProblem;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
-@Component
+@Service
 public class ChartService {
 
 	@Autowired

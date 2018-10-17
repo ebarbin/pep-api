@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import ar.edu.uade.pfi.pep.common.ProblemState;
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
@@ -21,7 +21,7 @@ import ar.edu.uade.pfi.pep.repository.document.Workspace;
 import ar.edu.uade.pfi.pep.repository.document.WorkspaceProblem;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
-@Component
+@Service
 public class WorkspaceService {
 
 	@Autowired

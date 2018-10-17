@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
@@ -23,7 +23,7 @@ import ar.edu.uade.pfi.pep.repository.document.user.User;
 import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEvent;
 import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEventType;
 
-@Component
+@Service
 public class UserService {
 
 	@Autowired
@@ -83,7 +83,7 @@ public class UserService {
 			user.setRole("ROLE_TEACHER");
 			user.setInstituteId(teacher.getInstituteId());
 			
-			//TODO GET DEFAULT PRIMITIVES, PROBLEMS, COURSES AND CLONE WITH THIS TEACHER.
+			//TODO GET DEFAULT PRIMITIVES, PROBLEMS AND CLONE WITH THIS TEACHER.
 		}
 
 		if (student != null) {

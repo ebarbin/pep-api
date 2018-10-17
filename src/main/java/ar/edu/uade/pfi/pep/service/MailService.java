@@ -12,11 +12,11 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import ar.edu.uade.pfi.pep.repository.document.user.User;
 
-@Component
+@Service
 public class MailService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);

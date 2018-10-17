@@ -9,12 +9,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 
-
-@Component
+@Service
 public class FileService {
 
 	@Autowired
@@ -24,6 +23,6 @@ public class FileService {
 		Criteria c = Criteria.where("_id").is(new ObjectId(fileId));
 		GridFSFile fsFile = this.gridOperations.findOne(new Query(c));
 		GridFsResource file = this.gridOperations.getResource(fsFile.getFilename());
-		return IOUtils.toByteArray(file.getInputStream()); 
+		return IOUtils.toByteArray(file.getInputStream());
 	}
 }

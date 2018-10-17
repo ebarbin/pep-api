@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import ar.edu.uade.pfi.pep.common.RequestDataHolder;
 import ar.edu.uade.pfi.pep.repository.PrimitiveRepository;
@@ -12,7 +12,7 @@ import ar.edu.uade.pfi.pep.repository.custom.PrimitiveRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Primitive;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 
-@Component
+@Service
 public class PrimitiveService {
 
 	@Autowired

@@ -4,14 +4,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import ar.edu.uade.pfi.pep.repository.ConsultationRepository;
 import ar.edu.uade.pfi.pep.repository.custom.ConsultationRepositoryImpl;
 import ar.edu.uade.pfi.pep.repository.document.Consultation;
 import ar.edu.uade.pfi.pep.repository.document.Inscription;
 
-@Component
+@Service
 public class ConsultationService {
 
 	@Autowired
