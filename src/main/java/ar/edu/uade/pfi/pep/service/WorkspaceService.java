@@ -32,6 +32,9 @@ public class WorkspaceService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MailService mailService;
 
 	public Workspace getActiveWorkspace() {
 		
@@ -192,6 +195,7 @@ public class WorkspaceService {
 			}
 		}
 		this.repository.save(w);
+		this.mailService.sendNeedCorrectionMail(w);
 	}
 
 	public List<Workspace> getWorkspacesByCourse(String courseId) {
@@ -240,6 +244,7 @@ public class WorkspaceService {
 				}
 			}
 			this.repository.save(ws);
+			this.mailService.sendCorrectionMail(ws);
 		}
 	}
 }

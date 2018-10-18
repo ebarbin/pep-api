@@ -22,11 +22,15 @@ public class ConsultationService {
 
 	@Autowired
 	private InscriptionService inscriptionService;
+	
+	@Autowired
+	private MailService mailService;
 
 	public void sendConsultation(Consultation consultation) {
 		consultation.setCreationDate(new Date());
 		consultation.setWasReadedByTeacher(Boolean.FALSE);
 		this.repository.save(consultation);
+		this.mailService.sendConsultationMail(consultation);
 	}
 
 	public List<Consultation> getStudentConsultations() {
@@ -71,9 +75,11 @@ public class ConsultationService {
 				consultation.setId(null);
 				consultation.setStudent(i.getStudent());
 				this.repository.save(consultation);
+				this.mailService.sendResponseConsultationMail(consultation);
 			}
 		} else {
 			this.repository.save(consultation);
+			this.mailService.sendResponseConsultationMail(consultation);
 		}
 	}
 
