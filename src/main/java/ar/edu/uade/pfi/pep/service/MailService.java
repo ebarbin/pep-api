@@ -149,7 +149,7 @@ public class MailService {
 
 	public void sendCorrectionMail(Workspace ws) {
 		
-		String subject = "Han enviado la corrección de un ejericio a tu cuenta PEP";
+		String subject = "Han enviado la corrección de un ejercicio a tu cuenta PEP";
 		StringBuffer sb = new StringBuffer("<h1>Portal Educativo de Programación</h1>");
 		sb.append("<p>Saludos del equipo de PEP,</p>");
 		sb.append("<p>El docente <i>{{teacher}}</i> ha enviado la corrección de un ejercicio.</p>");
@@ -165,19 +165,19 @@ public class MailService {
 	}
 	
 	public void sendNeedCorrectionMail(Workspace w) {
-		String subject = "Han enviado un pedido de corrección de un ejericio a tu cuenta PEP";
+		String subject = "Han enviado un pedido de corrección de un ejercicio a tu cuenta PEP";
 		StringBuffer sb = new StringBuffer("<h1>Portal Educativo de Programación</h1>");
 		sb.append("<p>Saludos del equipo de PEP,</p>");
-		sb.append("<p>El alumno <i>{{studen}}</i> ha resuelto un ejercicio y requiere corrección.</p>");
+		sb.append("<p>El alumno <i>{{student}}</i> ha resuelto un ejercicio y requiere corrección.</p>");
 		sb.append("<p>Para realizar la corrección has click <a href='http://localhost:4200'>aquí</a> para ingresar al portal.</p>");
 		sb.append("<p>Gracias por usar PEP.</p>");
 		sb.append("<p>Atentamente,</p>");
 		sb.append("<p>El equipo de PEP - Portal Educativo de Programación</p>");
 		
 		String body = sb.toString();
-		body = body.replace("{{teacher}}", w.getCourse().getTeacher().getUser().getName() + " " + w.getCourse().getTeacher().getUser().getSurename());
+		body = body.replace("{{student}}", w.getStudent().getUser().getName() + " " + w.getStudent().getUser().getSurename());
 		
-		this.sendMail(w.getStudent().getUser().getUsername(), subject, body);
+		this.sendMail(w.getCourse().getTeacher().getUser().getUsername(), subject, body);
 		
 	}
 	
