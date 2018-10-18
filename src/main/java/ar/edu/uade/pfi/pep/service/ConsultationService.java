@@ -75,7 +75,7 @@ public class ConsultationService {
 				consultation.setId(null);
 				consultation.setStudent(i.getStudent());
 				this.repository.save(consultation);
-				this.mailService.sendResponseConsultationMail(consultation);
+				this.mailService.sendComunicationMail(consultation);
 			}
 		} else {
 			this.repository.save(consultation);

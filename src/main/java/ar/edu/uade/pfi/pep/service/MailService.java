@@ -89,6 +89,26 @@ public class MailService {
 		this.sendMail(user.getUsername(), subject, body);
 	}
 	
+
+	public void sendComunicationMail(Consultation consultation) {
+		
+		String subject = "Han enviado un comunicado a un curso de tu cuenta PEP";
+		StringBuffer sb = new StringBuffer("<h1>Portal Educativo de Programación</h1>");
+		sb.append("<p>Saludos del equipo de PEP,</p>");
+		sb.append("<p>El docente <i>{{teacher}}</i> ha enviado el siguiente comunicado:</p>");
+		sb.append("<blockquote>{{response}}</blockquote >");
+		sb.append("<p>Has click <a href='http://localhost:4200'>aquí</a> para ingresar al portal.</p>");
+		sb.append("<p>Gracias por usar PEP.</p>");
+		sb.append("<p>Atentamente,</p>");
+		sb.append("<p>El equipo de PEP - Portal Educativo de Programación</p>");
+		
+		String body = sb.toString();
+		body = body.replace("{{teacher}}", consultation.getTeacher().getUser().getName() + " " + consultation.getTeacher().getUser().getSurename());
+		body = body.replace("{{response}}", consultation.getTeacherResponse());
+		
+		this.sendMail(consultation.getStudent().getUser().getUsername(), subject, body);
+	}
+	
 	public void sendResponseConsultationMail(Consultation consultation) {
 		
 		String subject = "Han enviado una respuesta a tu cuenta PEP";
