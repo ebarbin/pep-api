@@ -17,8 +17,10 @@ public class StudentService {
 	private StudentRepository repository;
 
 	public Student getStudent() {
-		
-		return this.repository.findByUserId(this.requestDataHolder.getUserId());
+		if (this.requestDataHolder.getUserId() != null) {
+			return this.repository.findByUserId(this.requestDataHolder.getUserId());
+		}
+		return null;
 	}
 
 	public Student update(Student student) {

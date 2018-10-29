@@ -117,4 +117,12 @@ public class ProblemService {
 			}
 		}
 	}
+	
+	public void save(Problem p) {
+		this.repository.save(p);
+	}
+
+	public List<Problem> getDefaultProblems() {
+		return this.repository.findByTeacherIsNull();
+	}
 }

@@ -1,6 +1,7 @@
 package ar.edu.uade.pfi.pep.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.uade.pfi.pep.controller.request.ChangePassword;
 import ar.edu.uade.pfi.pep.repository.UserRepository;
+import ar.edu.uade.pfi.pep.repository.document.Primitive;
+import ar.edu.uade.pfi.pep.repository.document.Problem;
 import ar.edu.uade.pfi.pep.repository.document.Student;
 import ar.edu.uade.pfi.pep.repository.document.Teacher;
 import ar.edu.uade.pfi.pep.repository.document.user.User;
@@ -40,7 +43,13 @@ public class UserService {
 
 	@Autowired
 	private GridFsOperations gridOperations;
+	
+	@Autowired
+	private PrimitiveService primitiveService;
 
+	@Autowired
+	private ProblemService problemService;
+	
 	public void register(User user) throws Exception {
 
 		User existingUser = this.repository.findByUsername(user.getUsername());
@@ -83,7 +92,26 @@ public class UserService {
 			user.setRole("ROLE_TEACHER");
 			user.setInstituteId(teacher.getInstituteId());
 			
-			//TODO GET DEFAULT PRIMITIVES, PROBLEMS AND CLONE WITH THIS TEACHER.
+			List<Primitive> defaultPrimitives = this.primitiveService.getDefaultPrimitives();
+			for (Primitive defaultPrimitive : defaultPrimitives) {
+				Primitive p = new Primitive();
+				p.setCode(defaultPrimitive.getCode());
+				p.setDescription(defaultPrimitive.getDescription());
+				p.setName(defaultPrimitive.getName());
+				p.setTeacher(teacher);
+				this.primitiveService.save(p);
+			}
+			
+			List<Problem> defaultProblems = this.problemService.getDefaultProblems();
+			for(Problem defaultProblem: defaultProblems) {
+				Problem p = new Problem();
+				p.setExplanation(defaultProblem.getExplanation());
+				p.setName(defaultProblem.getName());
+				p.setPreExecution(defaultProblem.getPreExecution());
+				p.setTeacher(teacher);
+				p.setTeacherSolucion(defaultProblem.getTeacherSolucion());
+				this.problemService.save(p);
+			}
 		}
 
 		if (student != null) {

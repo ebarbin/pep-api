@@ -94,4 +94,12 @@ public class PrimitiveService {
 	public List<Primitive> findByNameLike(String nameSearch) {
 		return this.customRepository.findByNameLike(nameSearch);
 	}
+
+	public List<Primitive> getDefaultPrimitives() {
+		return this.repository.findByTeacherIsNull();
+	}
+
+	public void save(Primitive p) {
+		this.repository.save(p);
+	}
 }

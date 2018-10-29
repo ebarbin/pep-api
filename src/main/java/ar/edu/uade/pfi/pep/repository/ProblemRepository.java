@@ -14,4 +14,6 @@ public interface ProblemRepository extends MongoRepository<Problem, String>, Pro
 	List<Problem> findByPrimitivesId(String primitiveId);
 
 	Problem findByTeacherUserIdAndName(String userId, String name);
+
+	List<Problem> findByTeacherIsNull();
 }

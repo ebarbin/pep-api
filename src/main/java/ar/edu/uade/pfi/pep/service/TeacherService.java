@@ -17,8 +17,10 @@ public class TeacherService {
 	private TeacherRepository repository;
 
 	public Teacher getTeacher() {
-		
-		return this.repository.findByUserId(this.requestDataHolder.getUserId());
+		if (this.requestDataHolder.getUserId() != null) {
+			return this.repository.findByUserId(this.requestDataHolder.getUserId());
+		}
+		return null;
 	}
 
 	public Teacher getTeacherByDocument(String documentType, String documentNumber) {

@@ -15,4 +15,5 @@ public interface PrimitiveRepository extends MongoRepository<Primitive, String>,
 
 	Primitive findByTeacherUserIdAndName(String userId, String name);
 
+	List<Primitive> findByTeacherIsNull();
 }
