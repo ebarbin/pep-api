@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -29,6 +30,9 @@ import ar.edu.uade.pfi.pep.repository.document.user.UserAccountEventType;
 @Service
 public class UserService {
 
+	private static final String PNG_FILE_EXT = "png";
+	private static final String JPG_FILE_EXT = "jpg";
+
 	@Autowired
 	private UserRepository repository;
 
@@ -37,19 +41,19 @@ public class UserService {
 
 	@Autowired
 	private StudentService studentService;
-	
+
 	@Autowired
 	private MailService mailService;
 
 	@Autowired
 	private GridFsOperations gridOperations;
-	
+
 	@Autowired
 	private PrimitiveService primitiveService;
 
 	@Autowired
 	private ProblemService problemService;
-	
+
 	public void register(User user) throws Exception {
 
 		User existingUser = this.repository.findByUsername(user.getUsername());
@@ -58,22 +62,22 @@ public class UserService {
 
 		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
-		Teacher teacher = this.teacherService.getTeacherByDocument(user.getDocumentType(),
-				user.getDocumentNumber());
-		Student student = this.studentService.getStudentByDocument(user.getDocumentType(),
-				user.getDocumentNumber());
+		Teacher teacher = this.teacherService.getTeacherByDocument(user.getDocumentType(), user.getDocumentNumber());
+		Student student = this.studentService.getStudentByDocument(user.getDocumentType(), user.getDocumentNumber());
 
 		if (teacher == null && student == null) {
 			throw new Exception("No hay persona registrada con ese tipo y nro. de documento.");
 		} else if (teacher != null && student != null) {
 			throw new Exception(
 					"La persona se encuentra registrada como alumno y como docente. Verifique los datos o contactese con la institución.");
-		} else if (teacher != null){
-			if (teacher.getUser() != null) 
-				throw new Exception("Ya se ha registrado el docente. Verifique los datos o contactese con la institución.");
-		} else if (student != null){
-			if (student.getUser() != null) 
-				throw new Exception("Ya se ha registrado el alumno. Verifique los datos o contactese con la institución.");
+		} else if (teacher != null) {
+			if (teacher.getUser() != null)
+				throw new Exception(
+						"Ya se ha registrado el docente. Verifique los datos o contactese con la institución.");
+		} else if (student != null) {
+			if (student.getUser() != null)
+				throw new Exception(
+						"Ya se ha registrado el alumno. Verifique los datos o contactese con la institución.");
 		}
 
 		user.setPassword(hashedPassword);
@@ -91,7 +95,7 @@ public class UserService {
 			this.teacherService.update(teacher);
 			user.setRole("ROLE_TEACHER");
 			user.setInstituteId(teacher.getInstituteId());
-			
+
 			List<Primitive> defaultPrimitives = this.primitiveService.getDefaultPrimitives();
 			for (Primitive defaultPrimitive : defaultPrimitives) {
 				Primitive p = new Primitive();
@@ -101,9 +105,9 @@ public class UserService {
 				p.setTeacher(teacher);
 				this.primitiveService.save(p);
 			}
-			
+
 			List<Problem> defaultProblems = this.problemService.getDefaultProblems();
-			for(Problem defaultProblem: defaultProblems) {
+			for (Problem defaultProblem : defaultProblems) {
 				Problem p = new Problem();
 				p.setExplanation(defaultProblem.getExplanation());
 				p.setName(defaultProblem.getName());
@@ -221,7 +225,7 @@ public class UserService {
 
 	public User update(User user) {
 		User existingUser = this.repository.findByUsername(user.getUsername());
-		
+
 		existingUser.setName(user.getName());
 		existingUser.setSurename(user.getSurename());
 
@@ -242,6 +246,12 @@ public class UserService {
 	}
 
 	public User storeProfileImage(String username, MultipartFile file) throws Exception {
+		String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+
+		if (!UserService.JPG_FILE_EXT.equals(fileExtension) && !UserService.PNG_FILE_EXT.equals(fileExtension)) {
+			throw new Exception("El archivo cargado no es válido. Solo se aceptan las extensiones: jpg y png.");
+		}
+
 		User existingUser = this.repository.findByUsername(username);
 		if (existingUser.getImageId() != null) {
 			Criteria c = Criteria.where("_id").is(new ObjectId(existingUser.getImageId()));
@@ -251,7 +261,7 @@ public class UserService {
 		existingUser.setImageId(objectId.toString());
 		return this.repository.save(existingUser);
 	}
-	
+
 	public User getUser(String userId) {
 		Optional<User> existingUser = this.repository.findById(userId);
 		return existingUser.get();
